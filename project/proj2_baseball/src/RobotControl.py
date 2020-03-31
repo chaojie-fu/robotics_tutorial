@@ -6,12 +6,12 @@ import Helper
 
 def load():
     # work in the following section to load your robot
-    robotName = 'robotarm.urdf'
+    # robotName = 'robotarm.urdf'
     # robotPath = os.path.join('project', 'proj2_baseball', 'rsc', robotName)
-    robotPath = Helper.findURDF(robotName)
+    # robotPath = Helper.findURDF(robotName)
     robotInitPos = [0.0, 0.0, 1.1]
     robotInitOrn = p.getQuaternionFromEuler([0, 0, 0])
-    robotId = p.loadURDF(robotPath,
+    robotId = p.loadURDF("../rsc/robotarm/urdf/robotarm.urdf",
                          robotInitPos, robotInitOrn)
     return robotId
 
@@ -25,17 +25,14 @@ def generateTraj(robotId, ballPos, targetPos):
     # do not use the inverse kinematics function of pybullet!!!!!!
     # The following code is a example for a very simple robot
 
-    # 原地不许动模式
     traj = []
     numJoints = p.getNumJoints(robotId)
 
-    a = []
     for i in range(numJoints):
-        b = p.getJointState(robotId, i)
-        a.append(b[0])
+        angle = [1.57, 0, 0, 0, 0, 1.57, 1.57, 0, 1.57]
 
-    for i in range(1000):
-        traj.append(a)
+    for i in range(100):
+        traj.append(angle)
 
     return traj
 

@@ -71,8 +71,8 @@ for i in [1, 2, 4, 8]:
         # control
         # work in this section
         if t < trajLength:
-            p.setJointMotorControlArray(robotId, list(
-                range(p.getNumJoints(robotId))), p.POSITION_CONTROL, targetPositions=traj[t])
+            p.setJointMotorControlArray(robotId, list(range(p.getNumJoints(robotId))),
+                                        p.POSITION_CONTROL, targetPositions=traj[t])
         t += 1
 
         # end control
