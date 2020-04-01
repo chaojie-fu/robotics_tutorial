@@ -12,7 +12,7 @@ def load():
     robotInitPos = [0.0, 0.0, 1.1]
     robotInitOrn = p.getQuaternionFromEuler([0, 0, 0])
     robotId = p.loadURDF("../rsc/robotarm/urdf/robotarm.urdf",
-                         robotInitPos, robotInitOrn)
+                         robotInitPos, robotInitOrn, flags=p.URDF_USE_SELF_COLLISION)
     return robotId
 
 
@@ -25,13 +25,12 @@ def generateTraj(robotId, ballPos, targetPos):
     # do not use the inverse kinematics function of pybullet!!!!!!
     # The following code is a example for a very simple robot
 
+    # rotate in a consistent angular velocity
     traj = []
     numJoints = p.getNumJoints(robotId)
 
-    for i in range(numJoints):
-        angle = [1.57, 0, 0, 0, 0, 1.57, 1.57, 0, 1.57]
-
-    for i in range(100):
+    for t in range(1000):
+        angle = [0.001 * t, 0.001 * t, 0.001 * t, 0.001 * t, 0.001 * t, 0.001 * t, 0.001 * t, 0.001 * t, 0.001 * t]
         traj.append(angle)
 
     return traj
