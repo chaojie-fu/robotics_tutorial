@@ -11,8 +11,8 @@ def load():
     # robotPath = Helper.findURDF(robotName)
     robotInitPos = [0.0, 0.0, 1.1]
     robotInitOrn = p.getQuaternionFromEuler([0, 0, 0])
-    robotId = p.loadURDF("../rsc/robotarm/urdf/robotarm.urdf",
-                         robotInitPos, robotInitOrn, flags=p.URDF_USE_SELF_COLLISION)
+    robotId = p.loadURDF("../rsc/robotarm/urdf/robotarm.urdf", robotInitPos, robotInitOrn,
+                         useFixedBase=1, flags=p.URDF_USE_SELF_COLLISION)
     return robotId
 
 
