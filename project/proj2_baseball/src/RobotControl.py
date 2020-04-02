@@ -12,7 +12,7 @@ def load():
     robotInitPos = [0.0, 0.0, 1.1]
     robotInitOrn = p.getQuaternionFromEuler([0, 0, 0])
     robotId = p.loadURDF("../rsc/robotarm/urdf/robotarm.urdf", robotInitPos, robotInitOrn,
-                         useFixedBase=1, flags=p.URDF_USE_SELF_COLLISION)
+                         useFixedBase=1)
     return robotId
 
 
@@ -30,7 +30,7 @@ def generateTraj(robotId, ballPos, targetPos):
     numJoints = p.getNumJoints(robotId)
 
     for t in range(1000):
-        angle = [0.001 * t, 0.001 * t, 0.001 * t, 0.001 * t, 0.001 * t, 0.001 * t, 0.001 * t, 0.001 * t, 0.001 * t]
+        angle = [0.001 * t, 0.001 * t, 0.001 * t, 0.001 * t, 0.001 * t, 0.001 * t, 0.001 * t, -0.001 * t, -0.001 * t]
         traj.append(angle)
 
     return traj
