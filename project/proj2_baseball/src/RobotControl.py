@@ -38,6 +38,6 @@ def generateTraj(robotId, ballPos, targetPos):
 
 def addDebugItems(robotId):
     # add any debug Items you like
-    p.addUserDebugLine([0, 0, 0], [1, 0, 0], lineColorRGB=[
-                       0.5, 0.5, 0.5], parentObjectUniqueId=robotId, parentLinkIndex=3)
-    # pass
+    # p.addUserDebugLine([0, 0, 0], [1, 0, 0], lineColorRGB=[
+    #                    0.5, 0.5, 0.5], parentObjectUniqueId=robotId, parentLinkIndex=3)
+    pass
