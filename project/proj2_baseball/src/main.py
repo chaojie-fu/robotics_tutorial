@@ -10,6 +10,7 @@ import Helper
 p.connect(p.GUI)
 
 # video flag
+# test
 recordVideo = True
 prefix = time.strftime('%Y%m%d%H%M%S', time.localtime(time.time()))
 
