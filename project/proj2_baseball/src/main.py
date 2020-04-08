@@ -7,7 +7,6 @@ from Env import Env
 import RobotControl
 import Helper
 
-# test
 p.connect(p.GUI)
 
 # video flag
