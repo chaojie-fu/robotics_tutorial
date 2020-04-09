@@ -37,9 +37,9 @@ def jacobian(theta1, theta2, theta3, theta5, theta6, theta7, dx=1e-8):
     oOF_origin = np.dot(WRA, np.dot(ARB, np.dot(BRC, np.dot(CRD, np.dot(DRE, np.dot(ERF, [[1], [0], [0]]))))))
 
     # pOF + partial theta1
-    theta1 = theta1 + dx
+    theta1temp = theta1 + dx
 
-    WRA = np.array([[math.cos(theta1), -math.sin(theta1), 0], [math.sin(theta1), math.cos(theta1), 0], [0, 0, 1]])
+    WRA = np.array([[math.cos(theta1temp), -math.sin(theta1temp), 0], [math.sin(theta1temp), math.cos(theta1temp), 0], [0, 0, 1]])
     WPA = np.array([[0], [0], [215.2]])
     WtA = np.concatenate((WRA, WPA), axis=1)
     WTA = np.concatenate((WtA, [[0, 0, 0, 1]]), axis=0)
@@ -75,14 +75,14 @@ def jacobian(theta1, theta2, theta3, theta5, theta6, theta7, dx=1e-8):
     oOF_theta1 = np.dot(WRA, np.dot(ARB, np.dot(BRC, np.dot(CRD, np.dot(DRE, np.dot(ERF, [[1], [0], [0]]))))))
 
     # pOF + partial theta2
-    theta2 = theta2 + dx
+    theta2temp = theta2 + dx
 
     WRA = np.array([[math.cos(theta1), -math.sin(theta1), 0], [math.sin(theta1), math.cos(theta1), 0], [0, 0, 1]])
     WPA = np.array([[0], [0], [215.2]])
     WtA = np.concatenate((WRA, WPA), axis=1)
     WTA = np.concatenate((WtA, [[0, 0, 0, 1]]), axis=0)
 
-    ARB = np.array([[1, 0, 0], [0, math.cos(theta2), -math.sin(theta2)], [0, math.sin(theta2), math.cos(theta2)]])
+    ARB = np.array([[1, 0, 0], [0, math.cos(theta2temp), -math.sin(theta2temp)], [0, math.sin(theta2temp), math.cos(theta2temp)]])
     APB = np.array([[162.4], [0], [0]])
     AtB = np.concatenate((ARB, APB), axis=1)
     ATB = np.concatenate((AtB, [[0, 0, 0, 1]]), axis=0)
@@ -113,7 +113,7 @@ def jacobian(theta1, theta2, theta3, theta5, theta6, theta7, dx=1e-8):
     oOF_theta2 = np.dot(WRA, np.dot(ARB, np.dot(BRC, np.dot(CRD, np.dot(DRE, np.dot(ERF, [[1], [0], [0]]))))))
 
     # pOF + partial theta3
-    theta3 = theta3 + dx
+    theta3temp = theta3 + dx
 
     WRA = np.array([[math.cos(theta1), -math.sin(theta1), 0], [math.sin(theta1), math.cos(theta1), 0], [0, 0, 1]])
     WPA = np.array([[0], [0], [215.2]])
@@ -125,7 +125,7 @@ def jacobian(theta1, theta2, theta3, theta5, theta6, theta7, dx=1e-8):
     AtB = np.concatenate((ARB, APB), axis=1)
     ATB = np.concatenate((AtB, [[0, 0, 0, 1]]), axis=0)
 
-    BRC = np.array([[1, 0, 0], [0, math.cos(theta3), math.sin(theta3)], [0, -math.sin(theta3), math.cos(theta3)]])
+    BRC = np.array([[1, 0, 0], [0, math.cos(theta3temp), math.sin(theta3temp)], [0, -math.sin(theta3temp), math.cos(theta3temp)]])
     BPC = np.array([[-162.4], [0], [351]])
     BtC = np.concatenate((BRC, BPC), axis=1)
     BTC = np.concatenate((BtC, [[0, 0, 0, 1]]), axis=0)
@@ -151,7 +151,7 @@ def jacobian(theta1, theta2, theta3, theta5, theta6, theta7, dx=1e-8):
     oOF_theta3 = np.dot(WRA, np.dot(ARB, np.dot(BRC, np.dot(CRD, np.dot(DRE, np.dot(ERF, [[1], [0], [0]]))))))
 
     # pOF + partial theta5
-    theta5 = theta5 + dx
+    theta5temp = theta5 + dx
 
     WRA = np.array([[math.cos(theta1), -math.sin(theta1), 0], [math.sin(theta1), math.cos(theta1), 0], [0, 0, 1]])
     WPA = np.array([[0], [0], [215.2]])
@@ -168,7 +168,7 @@ def jacobian(theta1, theta2, theta3, theta5, theta6, theta7, dx=1e-8):
     BtC = np.concatenate((BRC, BPC), axis=1)
     BTC = np.concatenate((BtC, [[0, 0, 0, 1]]), axis=0)
 
-    CRD = np.array([[1, 0, 0], [0, math.cos(theta5), -math.sin(theta5)], [0, math.sin(theta5), math.cos(theta5)]])
+    CRD = np.array([[1, 0, 0], [0, math.cos(theta5temp), -math.sin(theta5temp)], [0, math.sin(theta5temp), math.cos(theta5temp)]])
     CPD = np.array([[0], [0], [351.2]])
     CtD = np.concatenate((CRD, CPD), axis=1)
     CTD = np.concatenate((CtD, [[0, 0, 0, 1]]), axis=0)
@@ -189,7 +189,7 @@ def jacobian(theta1, theta2, theta3, theta5, theta6, theta7, dx=1e-8):
     oOF_theta5 = np.dot(WRA, np.dot(ARB, np.dot(BRC, np.dot(CRD, np.dot(DRE, np.dot(ERF, [[1], [0], [0]]))))))
 
     # pOF + partial theta6
-    theta6 = theta6 + dx
+    theta6temp = theta6 + dx
 
     WRA = np.array([[math.cos(theta1), -math.sin(theta1), 0], [math.sin(theta1), math.cos(theta1), 0], [0, 0, 1]])
     WPA = np.array([[0], [0], [215.2]])
@@ -211,7 +211,7 @@ def jacobian(theta1, theta2, theta3, theta5, theta6, theta7, dx=1e-8):
     CtD = np.concatenate((CRD, CPD), axis=1)
     CTD = np.concatenate((CtD, [[0, 0, 0, 1]]), axis=0)
 
-    DRE = np.array([[math.cos(theta6), -math.sin(theta6), 0], [math.sin(theta6), math.cos(theta6), 0], [0, 0, 1]])
+    DRE = np.array([[math.cos(theta6temp), -math.sin(theta6temp), 0], [math.sin(theta6temp), math.cos(theta6temp), 0], [0, 0, 1]])
     DPE = np.array([[162.4], [0], [0]])
     DtE = np.concatenate((DRE, DPE), axis=1)
     DTE = np.concatenate((DtE, [[0, 0, 0, 1]]), axis=0)
@@ -227,7 +227,7 @@ def jacobian(theta1, theta2, theta3, theta5, theta6, theta7, dx=1e-8):
     oOF_theta6 = np.dot(WRA, np.dot(ARB, np.dot(BRC, np.dot(CRD, np.dot(DRE, np.dot(ERF, [[1], [0], [0]]))))))
 
     # pOF + partial theta7
-    theta7 = theta7 + dx
+    theta7temp = theta7 + dx
 
     WRA = np.array([[math.cos(theta1), -math.sin(theta1), 0], [math.sin(theta1), math.cos(theta1), 0], [0, 0, 1]])
     WPA = np.array([[0], [0], [215.2]])
@@ -254,7 +254,7 @@ def jacobian(theta1, theta2, theta3, theta5, theta6, theta7, dx=1e-8):
     DtE = np.concatenate((DRE, DPE), axis=1)
     DTE = np.concatenate((DtE, [[0, 0, 0, 1]]), axis=0)
 
-    ERF = np.array([[1, 0, 0], [0, math.cos(theta7), -math.sin(theta7)], [0, math.sin(theta7), math.cos(theta7)]])
+    ERF = np.array([[1, 0, 0], [0, math.cos(theta7temp), -math.sin(theta7temp)], [0, math.sin(theta7temp), math.cos(theta7temp)]])
     EPF = np.array([[0], [0], [162.4]])
     EtF = np.concatenate((ERF, EPF), axis=1)
     ETF = np.concatenate((EtF, [[0, 0, 0, 1]]), axis=0)
@@ -291,5 +291,11 @@ def jacobian(theta1, theta2, theta3, theta5, theta6, theta7, dx=1e-8):
 
 # an example
 Ja = jacobian(theta1=0.1, theta2=0.1, theta3=0.1, theta5=0.1, theta6=0.1, theta7=0.1)
+p = [[0.1667], [-0.0348], [2.1772], [0.9801], [0.1982], [0.0100]]
 print(Ja)
-print(np.linalg.inv(Ja))
+print('\n')
+delta_theta = [[0.01], [0.01], [0.01], [0.01], [0.01], [0.01]]
+delta_p = np.dot(Ja, delta_theta)
+print(delta_p)
+print('\n')
+print(p + delta_p)

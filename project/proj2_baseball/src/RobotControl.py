@@ -2,6 +2,7 @@ import pybullet as p
 import os
 import numpy as np
 import Helper
+import Jacobian
 
 
 def load():
@@ -28,11 +29,27 @@ def generateTraj(robotId, ballPos, targetPos):
     # rotate in a consistent angular velocity
     traj = []
     numJoints = p.getNumJoints(robotId)
-
+    delta_t = 1 / 2400
+    # set an set of initial angle in case of singularity
+    theta = [0.1, 0.1, 0.1, 0, 0.1, 0.1, 0.1, 0, 0]
     for t in range(1000):
-        angle = [0.001 * t, 0.001 * t, 0.001 * t, 0.001 * t, 0.001 * t, 0.001 * t, 0.001 * t, -0.001 * t, -0.001 * t]
-        traj.append(angle)
-
+        v_p = [[0], [-0.1], [0], [0], [0], [0]]
+        Ja = np.linalg.inv(
+            Jacobian.jacobian(theta[0], theta[1], theta[2], theta[4], theta[5], theta[6]))
+        v_theta = np.dot(Ja, v_p)
+        delta_theta = [v_theta[0][0] * delta_t,
+                       v_theta[1][0] * delta_t,
+                       v_theta[2][0] * delta_t,
+                       0,
+                       v_theta[3][0] * delta_t,
+                       v_theta[4][0] * delta_t,
+                       v_theta[5][0] * delta_t,
+                       0,
+                       0]
+        theta = theta + delta_theta
+        print(theta)
+        traj.append([theta[0], theta[1], theta[2], theta[3], theta[4], theta[5], theta[6], theta[7], theta[8]])
+    print(traj)
     return traj
 
 
