@@ -1,302 +1,96 @@
 import numpy as np
-import math
 
 
-def jacobian(theta1, theta2, theta3, theta5, theta6, theta7, dx=1e-8):
-    WRA = np.array([[math.cos(theta1), -math.sin(theta1), 0], [math.sin(theta1), math.cos(theta1), 0], [0, 0, 1]])
-    WPA = np.array([[0], [0], [215.2]])
-    WtA = np.concatenate((WRA, WPA), axis=1)
-    WTA = np.concatenate((WtA, [[0, 0, 0, 1]]), axis=0)
-
-    ARB = np.array([[1, 0, 0], [0, math.cos(theta2), -math.sin(theta2)], [0, math.sin(theta2), math.cos(theta2)]])
-    APB = np.array([[162.4], [0], [0]])
-    AtB = np.concatenate((ARB, APB), axis=1)
-    ATB = np.concatenate((AtB, [[0, 0, 0, 1]]), axis=0)
-
-    BRC = np.array([[1, 0, 0], [0, math.cos(theta3), math.sin(theta3)], [0, -math.sin(theta3), math.cos(theta3)]])
-    BPC = np.array([[-162.4], [0], [351]])
-    BtC = np.concatenate((BRC, BPC), axis=1)
-    BTC = np.concatenate((BtC, [[0, 0, 0, 1]]), axis=0)
-
-    CRD = np.array([[1, 0, 0], [0, math.cos(theta5), -math.sin(theta5)], [0, math.sin(theta5), math.cos(theta5)]])
-    CPD = np.array([[0], [0], [351.2]])
-    CtD = np.concatenate((CRD, CPD), axis=1)
-    CTD = np.concatenate((CtD, [[0, 0, 0, 1]]), axis=0)
-
-    DRE = np.array([[math.cos(theta6), -math.sin(theta6), 0], [math.sin(theta6), math.cos(theta6), 0], [0, 0, 1]])
-    DPE = np.array([[162.4], [0], [0]])
-    DtE = np.concatenate((DRE, DPE), axis=1)
-    DTE = np.concatenate((DtE, [[0, 0, 0, 1]]), axis=0)
-
-    ERF = np.array([[1, 0, 0], [0, math.cos(theta7), -math.sin(theta7)], [0, math.sin(theta7), math.cos(theta7)]])
-    EPF = np.array([[0], [0], [162.4]])
-    EtF = np.concatenate((ERF, EPF), axis=1)
-    ETF = np.concatenate((EtF, [[0, 0, 0, 1]]), axis=0)
-
-    pOF_origin = np.dot(WTA, np.dot(ATB, np.dot(BTC, np.dot(CTD, np.dot(DTE, np.dot(ETF, [[0], [0], [0], [1]]))))))
-    oOF_origin = np.dot(WRA, np.dot(ARB, np.dot(BRC, np.dot(CRD, np.dot(DRE, np.dot(ERF, [[0], [0], [1]]))))))
-
-    # pOF + partial theta1
-    theta1temp = theta1 + dx
-
-    WRA = np.array([[math.cos(theta1temp), -math.sin(theta1temp), 0], [math.sin(theta1temp), math.cos(theta1temp), 0], [0, 0, 1]])
-    WPA = np.array([[0], [0], [215.2]])
-    WtA = np.concatenate((WRA, WPA), axis=1)
-    WTA = np.concatenate((WtA, [[0, 0, 0, 1]]), axis=0)
-
-    ARB = np.array([[1, 0, 0], [0, math.cos(theta2), -math.sin(theta2)], [0, math.sin(theta2), math.cos(theta2)]])
-    APB = np.array([[162.4], [0], [0]])
-    AtB = np.concatenate((ARB, APB), axis=1)
-    ATB = np.concatenate((AtB, [[0, 0, 0, 1]]), axis=0)
-
-    BRC = np.array([[1, 0, 0], [0, math.cos(theta3), math.sin(theta3)], [0, -math.sin(theta3), math.cos(theta3)]])
-    BPC = np.array([[-162.4], [0], [351]])
-    BtC = np.concatenate((BRC, BPC), axis=1)
-    BTC = np.concatenate((BtC, [[0, 0, 0, 1]]), axis=0)
-
-    CRD = np.array([[1, 0, 0], [0, math.cos(theta5), -math.sin(theta5)], [0, math.sin(theta5), math.cos(theta5)]])
-    CPD = np.array([[0], [0], [351.2]])
-    CtD = np.concatenate((CRD, CPD), axis=1)
-    CTD = np.concatenate((CtD, [[0, 0, 0, 1]]), axis=0)
-
-    DRE = np.array([[math.cos(theta6), -math.sin(theta6), 0], [math.sin(theta6), math.cos(theta6), 0], [0, 0, 1]])
-    DPE = np.array([[162.4], [0], [0]])
-    DtE = np.concatenate((DRE, DPE), axis=1)
-    DTE = np.concatenate((DtE, [[0, 0, 0, 1]]), axis=0)
-
-    ERF = np.array([[1, 0, 0], [0, math.cos(theta7), -math.sin(theta7)], [0, math.sin(theta7), math.cos(theta7)]])
-    EPF = np.array([[0], [0], [162.4]])
-    EtF = np.concatenate((ERF, EPF), axis=1)
-    ETF = np.concatenate((EtF, [[0, 0, 0, 1]]), axis=0)
-
-    PO = np.array([[0], [0], [0], [1]])
-
-    pOF_theta1 = np.dot(WTA, np.dot(ATB, np.dot(BTC, np.dot(CTD, np.dot(DTE, np.dot(ETF, PO))))))
-    oOF_theta1 = np.dot(WRA, np.dot(ARB, np.dot(BRC, np.dot(CRD, np.dot(DRE, np.dot(ERF, [[0], [0], [1]]))))))
-
-    # pOF + partial theta2
-    theta2temp = theta2 + dx
-
-    WRA = np.array([[math.cos(theta1), -math.sin(theta1), 0], [math.sin(theta1), math.cos(theta1), 0], [0, 0, 1]])
-    WPA = np.array([[0], [0], [215.2]])
-    WtA = np.concatenate((WRA, WPA), axis=1)
-    WTA = np.concatenate((WtA, [[0, 0, 0, 1]]), axis=0)
-
-    ARB = np.array([[1, 0, 0], [0, math.cos(theta2temp), -math.sin(theta2temp)], [0, math.sin(theta2temp), math.cos(theta2temp)]])
-    APB = np.array([[162.4], [0], [0]])
-    AtB = np.concatenate((ARB, APB), axis=1)
-    ATB = np.concatenate((AtB, [[0, 0, 0, 1]]), axis=0)
-
-    BRC = np.array([[1, 0, 0], [0, math.cos(theta3), math.sin(theta3)], [0, -math.sin(theta3), math.cos(theta3)]])
-    BPC = np.array([[-162.4], [0], [351]])
-    BtC = np.concatenate((BRC, BPC), axis=1)
-    BTC = np.concatenate((BtC, [[0, 0, 0, 1]]), axis=0)
-
-    CRD = np.array([[1, 0, 0], [0, math.cos(theta5), -math.sin(theta5)], [0, math.sin(theta5), math.cos(theta5)]])
-    CPD = np.array([[0], [0], [351.2]])
-    CtD = np.concatenate((CRD, CPD), axis=1)
-    CTD = np.concatenate((CtD, [[0, 0, 0, 1]]), axis=0)
-
-    DRE = np.array([[math.cos(theta6), -math.sin(theta6), 0], [math.sin(theta6), math.cos(theta6), 0], [0, 0, 1]])
-    DPE = np.array([[162.4], [0], [0]])
-    DtE = np.concatenate((DRE, DPE), axis=1)
-    DTE = np.concatenate((DtE, [[0, 0, 0, 1]]), axis=0)
-
-    ERF = np.array([[1, 0, 0], [0, math.cos(theta7), -math.sin(theta7)], [0, math.sin(theta7), math.cos(theta7)]])
-    EPF = np.array([[0], [0], [162.4]])
-    EtF = np.concatenate((ERF, EPF), axis=1)
-    ETF = np.concatenate((EtF, [[0, 0, 0, 1]]), axis=0)
-
-    PO = np.array([[0], [0], [0], [1]])
-
-    pOF_theta2 = np.dot(WTA, np.dot(ATB, np.dot(BTC, np.dot(CTD, np.dot(DTE, np.dot(ETF, PO))))))
-    oOF_theta2 = np.dot(WRA, np.dot(ARB, np.dot(BRC, np.dot(CRD, np.dot(DRE, np.dot(ERF, [[0], [0], [1]]))))))
-
-    # pOF + partial theta3
-    theta3temp = theta3 + dx
-
-    WRA = np.array([[math.cos(theta1), -math.sin(theta1), 0], [math.sin(theta1), math.cos(theta1), 0], [0, 0, 1]])
-    WPA = np.array([[0], [0], [215.2]])
-    WtA = np.concatenate((WRA, WPA), axis=1)
-    WTA = np.concatenate((WtA, [[0, 0, 0, 1]]), axis=0)
-
-    ARB = np.array([[1, 0, 0], [0, math.cos(theta2), -math.sin(theta2)], [0, math.sin(theta2), math.cos(theta2)]])
-    APB = np.array([[162.4], [0], [0]])
-    AtB = np.concatenate((ARB, APB), axis=1)
-    ATB = np.concatenate((AtB, [[0, 0, 0, 1]]), axis=0)
-
-    BRC = np.array([[1, 0, 0], [0, math.cos(theta3temp), math.sin(theta3temp)], [0, -math.sin(theta3temp), math.cos(theta3temp)]])
-    BPC = np.array([[-162.4], [0], [351]])
-    BtC = np.concatenate((BRC, BPC), axis=1)
-    BTC = np.concatenate((BtC, [[0, 0, 0, 1]]), axis=0)
-
-    CRD = np.array([[1, 0, 0], [0, math.cos(theta5), -math.sin(theta5)], [0, math.sin(theta5), math.cos(theta5)]])
-    CPD = np.array([[0], [0], [351.2]])
-    CtD = np.concatenate((CRD, CPD), axis=1)
-    CTD = np.concatenate((CtD, [[0, 0, 0, 1]]), axis=0)
-
-    DRE = np.array([[math.cos(theta6), -math.sin(theta6), 0], [math.sin(theta6), math.cos(theta6), 0], [0, 0, 1]])
-    DPE = np.array([[162.4], [0], [0]])
-    DtE = np.concatenate((DRE, DPE), axis=1)
-    DTE = np.concatenate((DtE, [[0, 0, 0, 1]]), axis=0)
-
-    ERF = np.array([[1, 0, 0], [0, math.cos(theta7), -math.sin(theta7)], [0, math.sin(theta7), math.cos(theta7)]])
-    EPF = np.array([[0], [0], [162.4]])
-    EtF = np.concatenate((ERF, EPF), axis=1)
-    ETF = np.concatenate((EtF, [[0, 0, 0, 1]]), axis=0)
-
-    PO = np.array([[0], [0], [0], [1]])
-
-    pOF_theta3 = np.dot(WTA, np.dot(ATB, np.dot(BTC, np.dot(CTD, np.dot(DTE, np.dot(ETF, PO))))))
-    oOF_theta3 = np.dot(WRA, np.dot(ARB, np.dot(BRC, np.dot(CRD, np.dot(DRE, np.dot(ERF, [[0], [0], [1]]))))))
-
-    # pOF + partial theta5
-    theta5temp = theta5 + dx
-
-    WRA = np.array([[math.cos(theta1), -math.sin(theta1), 0], [math.sin(theta1), math.cos(theta1), 0], [0, 0, 1]])
-    WPA = np.array([[0], [0], [215.2]])
-    WtA = np.concatenate((WRA, WPA), axis=1)
-    WTA = np.concatenate((WtA, [[0, 0, 0, 1]]), axis=0)
-
-    ARB = np.array([[1, 0, 0], [0, math.cos(theta2), -math.sin(theta2)], [0, math.sin(theta2), math.cos(theta2)]])
-    APB = np.array([[162.4], [0], [0]])
-    AtB = np.concatenate((ARB, APB), axis=1)
-    ATB = np.concatenate((AtB, [[0, 0, 0, 1]]), axis=0)
-
-    BRC = np.array([[1, 0, 0], [0, math.cos(theta3), math.sin(theta3)], [0, -math.sin(theta3), math.cos(theta3)]])
-    BPC = np.array([[-162.4], [0], [351]])
-    BtC = np.concatenate((BRC, BPC), axis=1)
-    BTC = np.concatenate((BtC, [[0, 0, 0, 1]]), axis=0)
-
-    CRD = np.array([[1, 0, 0], [0, math.cos(theta5temp), -math.sin(theta5temp)], [0, math.sin(theta5temp), math.cos(theta5temp)]])
-    CPD = np.array([[0], [0], [351.2]])
-    CtD = np.concatenate((CRD, CPD), axis=1)
-    CTD = np.concatenate((CtD, [[0, 0, 0, 1]]), axis=0)
-
-    DRE = np.array([[math.cos(theta6), -math.sin(theta6), 0], [math.sin(theta6), math.cos(theta6), 0], [0, 0, 1]])
-    DPE = np.array([[162.4], [0], [0]])
-    DtE = np.concatenate((DRE, DPE), axis=1)
-    DTE = np.concatenate((DtE, [[0, 0, 0, 1]]), axis=0)
-
-    ERF = np.array([[1, 0, 0], [0, math.cos(theta7), -math.sin(theta7)], [0, math.sin(theta7), math.cos(theta7)]])
-    EPF = np.array([[0], [0], [162.4]])
-    EtF = np.concatenate((ERF, EPF), axis=1)
-    ETF = np.concatenate((EtF, [[0, 0, 0, 1]]), axis=0)
-
-    PO = np.array([[0], [0], [0], [1]])
-
-    pOF_theta5 = np.dot(WTA, np.dot(ATB, np.dot(BTC, np.dot(CTD, np.dot(DTE, np.dot(ETF, PO))))))
-    oOF_theta5 = np.dot(WRA, np.dot(ARB, np.dot(BRC, np.dot(CRD, np.dot(DRE, np.dot(ERF, [[0], [0], [1]]))))))
-
-    # pOF + partial theta6
-    theta6temp = theta6 + dx
-
-    WRA = np.array([[math.cos(theta1), -math.sin(theta1), 0], [math.sin(theta1), math.cos(theta1), 0], [0, 0, 1]])
-    WPA = np.array([[0], [0], [215.2]])
-    WtA = np.concatenate((WRA, WPA), axis=1)
-    WTA = np.concatenate((WtA, [[0, 0, 0, 1]]), axis=0)
-
-    ARB = np.array([[1, 0, 0], [0, math.cos(theta2), -math.sin(theta2)], [0, math.sin(theta2), math.cos(theta2)]])
-    APB = np.array([[162.4], [0], [0]])
-    AtB = np.concatenate((ARB, APB), axis=1)
-    ATB = np.concatenate((AtB, [[0, 0, 0, 1]]), axis=0)
-
-    BRC = np.array([[1, 0, 0], [0, math.cos(theta3), math.sin(theta3)], [0, -math.sin(theta3), math.cos(theta3)]])
-    BPC = np.array([[-162.4], [0], [351]])
-    BtC = np.concatenate((BRC, BPC), axis=1)
-    BTC = np.concatenate((BtC, [[0, 0, 0, 1]]), axis=0)
-
-    CRD = np.array([[1, 0, 0], [0, math.cos(theta5), -math.sin(theta5)], [0, math.sin(theta5), math.cos(theta5)]])
-    CPD = np.array([[0], [0], [351.2]])
-    CtD = np.concatenate((CRD, CPD), axis=1)
-    CTD = np.concatenate((CtD, [[0, 0, 0, 1]]), axis=0)
-
-    DRE = np.array([[math.cos(theta6temp), -math.sin(theta6temp), 0], [math.sin(theta6temp), math.cos(theta6temp), 0], [0, 0, 1]])
-    DPE = np.array([[162.4], [0], [0]])
-    DtE = np.concatenate((DRE, DPE), axis=1)
-    DTE = np.concatenate((DtE, [[0, 0, 0, 1]]), axis=0)
-
-    ERF = np.array([[1, 0, 0], [0, math.cos(theta7), -math.sin(theta7)], [0, math.sin(theta7), math.cos(theta7)]])
-    EPF = np.array([[0], [0], [162.4]])
-    EtF = np.concatenate((ERF, EPF), axis=1)
-    ETF = np.concatenate((EtF, [[0, 0, 0, 1]]), axis=0)
-
-    PO = np.array([[0], [0], [0], [1]])
-
-    pOF_theta6 = np.dot(WTA, np.dot(ATB, np.dot(BTC, np.dot(CTD, np.dot(DTE, np.dot(ETF, PO))))))
-    oOF_theta6 = np.dot(WRA, np.dot(ARB, np.dot(BRC, np.dot(CRD, np.dot(DRE, np.dot(ERF, [[0], [0], [1]]))))))
-
-    # pOF + partial theta7
-    theta7temp = theta7 + dx
-
-    WRA = np.array([[math.cos(theta1), -math.sin(theta1), 0], [math.sin(theta1), math.cos(theta1), 0], [0, 0, 1]])
-    WPA = np.array([[0], [0], [215.2]])
-    WtA = np.concatenate((WRA, WPA), axis=1)
-    WTA = np.concatenate((WtA, [[0, 0, 0, 1]]), axis=0)
-
-    ARB = np.array([[1, 0, 0], [0, math.cos(theta2), -math.sin(theta2)], [0, math.sin(theta2), math.cos(theta2)]])
-    APB = np.array([[162.4], [0], [0]])
-    AtB = np.concatenate((ARB, APB), axis=1)
-    ATB = np.concatenate((AtB, [[0, 0, 0, 1]]), axis=0)
-
-    BRC = np.array([[1, 0, 0], [0, math.cos(theta3), math.sin(theta3)], [0, -math.sin(theta3), math.cos(theta3)]])
-    BPC = np.array([[-162.4], [0], [351]])
-    BtC = np.concatenate((BRC, BPC), axis=1)
-    BTC = np.concatenate((BtC, [[0, 0, 0, 1]]), axis=0)
-
-    CRD = np.array([[1, 0, 0], [0, math.cos(theta5), -math.sin(theta5)], [0, math.sin(theta5), math.cos(theta5)]])
-    CPD = np.array([[0], [0], [351.2]])
-    CtD = np.concatenate((CRD, CPD), axis=1)
-    CTD = np.concatenate((CtD, [[0, 0, 0, 1]]), axis=0)
-
-    DRE = np.array([[math.cos(theta6), -math.sin(theta6), 0], [math.sin(theta6), math.cos(theta6), 0], [0, 0, 1]])
-    DPE = np.array([[162.4], [0], [0]])
-    DtE = np.concatenate((DRE, DPE), axis=1)
-    DTE = np.concatenate((DtE, [[0, 0, 0, 1]]), axis=0)
-
-    ERF = np.array([[1, 0, 0], [0, math.cos(theta7temp), -math.sin(theta7temp)], [0, math.sin(theta7temp), math.cos(theta7temp)]])
-    EPF = np.array([[0], [0], [162.4]])
-    EtF = np.concatenate((ERF, EPF), axis=1)
-    ETF = np.concatenate((EtF, [[0, 0, 0, 1]]), axis=0)
-
-    PO = np.array([[0], [0], [0], [1]])
-
-    pOF_theta7 = np.dot(WTA, np.dot(ATB, np.dot(BTC, np.dot(CTD, np.dot(DTE, np.dot(ETF, PO))))))
-    oOF_theta7 = np.dot(WRA, np.dot(ARB, np.dot(BRC, np.dot(CRD, np.dot(DRE, np.dot(ERF, [[0], [0], [1]]))))))
-
-    return [[(pOF_theta1[0][0] - pOF_origin[0][0])/dx, (pOF_theta2[0][0] - pOF_origin[0][0])/dx,
-             (pOF_theta3[0][0] - pOF_origin[0][0])/dx, (pOF_theta5[0][0] - pOF_origin[0][0])/dx,
-             (pOF_theta6[0][0] - pOF_origin[0][0])/dx, (pOF_theta7[0][0] - pOF_origin[0][0])/dx],
-
-            [(pOF_theta1[1][0] - pOF_origin[1][0])/dx, (pOF_theta2[1][0] - pOF_origin[1][0])/dx,
-             (pOF_theta3[1][0] - pOF_origin[1][0])/dx, (pOF_theta5[1][0] - pOF_origin[1][0])/dx,
-             (pOF_theta6[1][0] - pOF_origin[1][0])/dx, (pOF_theta7[1][0] - pOF_origin[1][0])/dx],
-
-            [(pOF_theta1[2][0] - pOF_origin[2][0])/dx, (pOF_theta2[2][0] - pOF_origin[2][0])/dx,
-             (pOF_theta3[2][0] - pOF_origin[2][0])/dx, (pOF_theta5[2][0] - pOF_origin[2][0])/dx,
-             (pOF_theta6[2][0] - pOF_origin[2][0])/dx, (pOF_theta7[2][0] - pOF_origin[2][0])/dx],
-
-            [(oOF_theta1[0][0] - oOF_origin[0][0])/dx, (oOF_theta2[0][0] - oOF_origin[0][0])/dx,
-             (oOF_theta3[0][0] - oOF_origin[0][0])/dx, (oOF_theta5[0][0] - oOF_origin[0][0])/dx,
-             (oOF_theta6[0][0] - oOF_origin[0][0])/dx, (oOF_theta7[0][0] - oOF_origin[0][0])/dx],
-
-            [(oOF_theta1[1][0] - oOF_origin[1][0])/dx, (oOF_theta2[1][0] - oOF_origin[1][0])/dx,
-             (oOF_theta3[1][0] - oOF_origin[1][0])/dx, (oOF_theta5[1][0] - oOF_origin[1][0])/dx,
-             (oOF_theta6[1][0] - oOF_origin[1][0])/dx, (oOF_theta7[1][0] - oOF_origin[1][0])/dx],
-
-            [(oOF_theta1[2][0] - oOF_origin[2][0])/dx, (oOF_theta2[2][0] - oOF_origin[2][0])/dx,
-             (oOF_theta3[2][0] - oOF_origin[2][0])/dx, (oOF_theta5[2][0] - oOF_origin[2][0])/dx,
-             (oOF_theta6[2][0] - oOF_origin[2][0])/dx, (oOF_theta7[2][0] - pOF_origin[2][0])/dx]]
-
-
-# an example
-# Ja = jacobian(theta1=0.1, theta2=0.1, theta3=0.1, theta5=0.1, theta6=0.1, theta7=0.1)
-# p = [[216.7], [24.7], [217.77], [0.0297], [-0.1962], [0.9801]]
-#
-# print(Ja)
-# print('\n')
-# delta_theta = [[0.01], [0.01], [0.01], [0.01], [0.01], [0.01]]
-# delta_p = np.dot(Ja, delta_theta)
-# print(delta_p)
-# print('\n')
-# print(p + delta_p)
+def jacobian(theta1, theta2, theta3, theta5, theta6, theta7):
+    l2 = 162.4
+    l31 = -162.4
+    l32 = 351.0
+    l4 = 351.2
+    l5 = 162.4
+    l6 = 162.4
+
+    A1 = -l32 * np.sin(theta2)
+    A2 = l2 * np.cos(theta2) * np.cos(theta3) + l31 * np.sin(theta2) * np.cos(theta3) + \
+         l2 * np.sin(theta2) * np.sin(theta3) - l31 * np.sin(theta2) * np.sin(theta3)
+    A3 = l2 * np.cos(theta2) * np.sin(theta3) + l31 * np.sin(theta2) * np.sin(theta3) - \
+         l2 * np.sin(theta2) * np.sin(theta3) + l31 * np.sin(theta2) * np.cos(theta3)
+    B2 = l32 * np.sin(theta3)
+    B3 = -l32 * np.cos(theta3)
+    D1 = np.sin(theta2) * np.cos(theta3) - np.cos(theta2) * np.sin(theta3)
+    D2 = np.sin(theta2) * np.sin(theta3) + np.cos(theta2) * np.cos(theta3)
+
+    A4 = A1 + D1 * l4
+    A5 = A2 * np.cos(theta5) - l4 * np.cos(theta5) + A3 * np.sin(theta5)
+    A6 = -A2 * np.sin(theta5) + l4 * np.sin(theta5) + A3 * np.cos(theta5)
+    B5 = B2 * np.cos(theta5) + B3 * np.sin(theta5)
+    B6 = -B2 * np.sin(theta5) + B3 * np.cos(theta5)
+    E5 = -l4 * np.cos(theta5)
+    E6 = l4 * np.sin(theta5)
+    D3 = D1 * np.cos(theta5) + D2 * np.sin(theta5)
+    D4 = -D1 * np.sin(theta5) + D2 * np.cos(theta5)
+
+    A7 = A4 * np.cos(theta6) + A5 * np.sin(theta6) + D4 * l5 * np.sin(theta6)
+    A8 = -A4 * np.sin(theta6) + A5 * np.cos(theta6) + D4 * l5 * np.cos(theta6)
+    A9 = A6 - D3 * l5
+    B7 = B5 * np.sin(theta6)
+    B8 = B5 * np.cos(theta6)
+    B9 = B6
+    E7 = E5 * np.sin(theta6)
+    E8 = E5 * np.cos(theta6)
+    E9 = E6
+    G1 = np.cos(theta6) + D3 * np.sin(theta6)
+    G2 = -np.sin(theta6) + D3 * np.cos(theta6)
+    G3 = D4
+    H1 = np.cos(theta6)
+    H2 = -np.sin(theta6)
+    I1 = np.cos(theta6)
+    I2 = -np.sin(theta6)
+
+    Ja00 = A7 + G2 * l6
+    Ja01 = B7
+    Ja02 = E7 + H2 * l6
+    Ja03 = I2 * l6
+    Ja04 = 0
+    Ja05 = 0
+
+    Ja10 = A8 * np.cos(theta7) - G1 * l6 * np.cos(theta7) + A9 * np.sin(theta7)
+    Ja11 = B8 * np.cos(theta7) + B9 * np.sin(theta7)
+    Ja12 = -H1 * l6 * np.cos(theta7) + E8 * np.cos(theta7) + E9 * np.sin(theta7)
+    Ja13 = -I1 * l6 * np.sin(theta7)
+    Ja14 = 0
+    Ja15 = 0
+
+    Ja20 = -A8 * np.sin(theta7) + G1 * l6 * np.sin(theta7) + A9 * np.sin(theta7)
+    Ja21 = -B8 * np.sin(theta7) + B9 * np.cos(theta7)
+    Ja22 = H1 * l6 * np.sin(theta7) - E8 * np.sin(theta7) + E9 * np.sin(theta7)
+    Ja23 = I1 * l6 * np.sin(theta7)
+    Ja24 = 0
+    Ja25 = 0
+
+    Ja30 = G1
+    Ja31 = 0
+    Ja32 = H1
+    Ja33 = I1
+    Ja34 = 0
+    Ja35 = 1
+
+    Ja40 = G2 * np.cos(theta7) + G3 * np.sin(theta7)
+    Ja41 = 0
+    Ja42 = H2 * np.cos(theta7)
+    Ja43 = I2 * np.cos(theta7)
+    Ja44 = np.sin(theta7)
+    Ja45 = 0
+
+    Ja50 = -G2 * np.sin(theta7) + G3 * np.cos(theta7)
+    Ja51 = 0
+    Ja52 = -H2 * np.sin(theta7)
+    Ja53 = -I2 * np.sin(theta7)
+    Ja54 = np.cos(theta7)
+    Ja55 = 0
+
+    return [[Ja00, Ja01, Ja02, Ja03, Ja04, Ja05],
+            [Ja10, Ja11, Ja12, Ja13, Ja14, Ja15],
+            [Ja20, Ja21, Ja22, Ja23, Ja24, Ja25],
+            [Ja30, Ja31, Ja32, Ja33, Ja34, Ja35],
+            [Ja40, Ja41, Ja42, Ja43, Ja44, Ja45],
+            [Ja50, Ja51, Ja52, Ja53, Ja54, Ja55]]
