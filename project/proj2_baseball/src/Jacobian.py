@@ -34,7 +34,7 @@ def jacobian(theta1, theta2, theta3, theta5, theta6, theta7, dx=1e-8):
     ETF = np.concatenate((EtF, [[0, 0, 0, 1]]), axis=0)
 
     pOF_origin = np.dot(WTA, np.dot(ATB, np.dot(BTC, np.dot(CTD, np.dot(DTE, np.dot(ETF, [[0], [0], [0], [1]]))))))
-    oOF_origin = np.dot(WRA, np.dot(ARB, np.dot(BRC, np.dot(CRD, np.dot(DRE, np.dot(ERF, [[1], [0], [0]]))))))
+    oOF_origin = np.dot(WRA, np.dot(ARB, np.dot(BRC, np.dot(CRD, np.dot(DRE, np.dot(ERF, [[0], [0], [1]]))))))
 
     # pOF + partial theta1
     theta1temp = theta1 + dx
@@ -72,7 +72,7 @@ def jacobian(theta1, theta2, theta3, theta5, theta6, theta7, dx=1e-8):
     PO = np.array([[0], [0], [0], [1]])
 
     pOF_theta1 = np.dot(WTA, np.dot(ATB, np.dot(BTC, np.dot(CTD, np.dot(DTE, np.dot(ETF, PO))))))
-    oOF_theta1 = np.dot(WRA, np.dot(ARB, np.dot(BRC, np.dot(CRD, np.dot(DRE, np.dot(ERF, [[1], [0], [0]]))))))
+    oOF_theta1 = np.dot(WRA, np.dot(ARB, np.dot(BRC, np.dot(CRD, np.dot(DRE, np.dot(ERF, [[0], [0], [1]]))))))
 
     # pOF + partial theta2
     theta2temp = theta2 + dx
@@ -110,7 +110,7 @@ def jacobian(theta1, theta2, theta3, theta5, theta6, theta7, dx=1e-8):
     PO = np.array([[0], [0], [0], [1]])
 
     pOF_theta2 = np.dot(WTA, np.dot(ATB, np.dot(BTC, np.dot(CTD, np.dot(DTE, np.dot(ETF, PO))))))
-    oOF_theta2 = np.dot(WRA, np.dot(ARB, np.dot(BRC, np.dot(CRD, np.dot(DRE, np.dot(ERF, [[1], [0], [0]]))))))
+    oOF_theta2 = np.dot(WRA, np.dot(ARB, np.dot(BRC, np.dot(CRD, np.dot(DRE, np.dot(ERF, [[0], [0], [1]]))))))
 
     # pOF + partial theta3
     theta3temp = theta3 + dx
@@ -148,7 +148,7 @@ def jacobian(theta1, theta2, theta3, theta5, theta6, theta7, dx=1e-8):
     PO = np.array([[0], [0], [0], [1]])
 
     pOF_theta3 = np.dot(WTA, np.dot(ATB, np.dot(BTC, np.dot(CTD, np.dot(DTE, np.dot(ETF, PO))))))
-    oOF_theta3 = np.dot(WRA, np.dot(ARB, np.dot(BRC, np.dot(CRD, np.dot(DRE, np.dot(ERF, [[1], [0], [0]]))))))
+    oOF_theta3 = np.dot(WRA, np.dot(ARB, np.dot(BRC, np.dot(CRD, np.dot(DRE, np.dot(ERF, [[0], [0], [1]]))))))
 
     # pOF + partial theta5
     theta5temp = theta5 + dx
@@ -186,7 +186,7 @@ def jacobian(theta1, theta2, theta3, theta5, theta6, theta7, dx=1e-8):
     PO = np.array([[0], [0], [0], [1]])
 
     pOF_theta5 = np.dot(WTA, np.dot(ATB, np.dot(BTC, np.dot(CTD, np.dot(DTE, np.dot(ETF, PO))))))
-    oOF_theta5 = np.dot(WRA, np.dot(ARB, np.dot(BRC, np.dot(CRD, np.dot(DRE, np.dot(ERF, [[1], [0], [0]]))))))
+    oOF_theta5 = np.dot(WRA, np.dot(ARB, np.dot(BRC, np.dot(CRD, np.dot(DRE, np.dot(ERF, [[0], [0], [1]]))))))
 
     # pOF + partial theta6
     theta6temp = theta6 + dx
@@ -224,7 +224,7 @@ def jacobian(theta1, theta2, theta3, theta5, theta6, theta7, dx=1e-8):
     PO = np.array([[0], [0], [0], [1]])
 
     pOF_theta6 = np.dot(WTA, np.dot(ATB, np.dot(BTC, np.dot(CTD, np.dot(DTE, np.dot(ETF, PO))))))
-    oOF_theta6 = np.dot(WRA, np.dot(ARB, np.dot(BRC, np.dot(CRD, np.dot(DRE, np.dot(ERF, [[1], [0], [0]]))))))
+    oOF_theta6 = np.dot(WRA, np.dot(ARB, np.dot(BRC, np.dot(CRD, np.dot(DRE, np.dot(ERF, [[0], [0], [1]]))))))
 
     # pOF + partial theta7
     theta7temp = theta7 + dx
@@ -262,40 +262,41 @@ def jacobian(theta1, theta2, theta3, theta5, theta6, theta7, dx=1e-8):
     PO = np.array([[0], [0], [0], [1]])
 
     pOF_theta7 = np.dot(WTA, np.dot(ATB, np.dot(BTC, np.dot(CTD, np.dot(DTE, np.dot(ETF, PO))))))
-    oOF_theta7 = np.dot(WRA, np.dot(ARB, np.dot(BRC, np.dot(CRD, np.dot(DRE, np.dot(ERF, [[1], [0], [0]]))))))
+    oOF_theta7 = np.dot(WRA, np.dot(ARB, np.dot(BRC, np.dot(CRD, np.dot(DRE, np.dot(ERF, [[0], [0], [1]]))))))
 
-    return [[pOF_theta1[0][0] - pOF_origin[0][0], pOF_theta2[0][0] - pOF_origin[0][0],
-             pOF_theta3[0][0] - pOF_origin[0][0], pOF_theta5[0][0] - pOF_origin[0][0],
-             pOF_theta6[0][0] - pOF_origin[0][0], pOF_theta7[0][0] - pOF_origin[0][0]],
+    return [[(pOF_theta1[0][0] - pOF_origin[0][0])/dx, (pOF_theta2[0][0] - pOF_origin[0][0])/dx,
+             (pOF_theta3[0][0] - pOF_origin[0][0])/dx, (pOF_theta5[0][0] - pOF_origin[0][0])/dx,
+             (pOF_theta6[0][0] - pOF_origin[0][0])/dx, (pOF_theta7[0][0] - pOF_origin[0][0])/dx],
 
-            [pOF_theta1[1][0] - pOF_origin[1][0], pOF_theta2[1][0] - pOF_origin[1][0],
-             pOF_theta3[1][0] - pOF_origin[1][0], pOF_theta5[1][0] - pOF_origin[1][0],
-             pOF_theta6[1][0] - pOF_origin[1][0], pOF_theta7[1][0] - pOF_origin[1][0]],
+            [(pOF_theta1[1][0] - pOF_origin[1][0])/dx, (pOF_theta2[1][0] - pOF_origin[1][0])/dx,
+             (pOF_theta3[1][0] - pOF_origin[1][0])/dx, (pOF_theta5[1][0] - pOF_origin[1][0])/dx,
+             (pOF_theta6[1][0] - pOF_origin[1][0])/dx, (pOF_theta7[1][0] - pOF_origin[1][0])/dx],
 
-            [pOF_theta1[2][0] - pOF_origin[2][0], pOF_theta2[2][0] - pOF_origin[2][0],
-             pOF_theta3[2][0] - pOF_origin[2][0], pOF_theta5[2][0] - pOF_origin[2][0],
-             pOF_theta6[2][0] - pOF_origin[2][0], pOF_theta7[2][0] - pOF_origin[2][0]],
+            [(pOF_theta1[2][0] - pOF_origin[2][0])/dx, (pOF_theta2[2][0] - pOF_origin[2][0])/dx,
+             (pOF_theta3[2][0] - pOF_origin[2][0])/dx, (pOF_theta5[2][0] - pOF_origin[2][0])/dx,
+             (pOF_theta6[2][0] - pOF_origin[2][0])/dx, (pOF_theta7[2][0] - pOF_origin[2][0])/dx],
 
-            [oOF_theta1[0][0] - oOF_origin[0][0], oOF_theta2[0][0] - oOF_origin[0][0],
-             oOF_theta3[0][0] - oOF_origin[0][0], oOF_theta5[0][0] - oOF_origin[0][0],
-             oOF_theta6[0][0] - oOF_origin[0][0], oOF_theta7[0][0] - oOF_origin[0][0]],
+            [(oOF_theta1[0][0] - oOF_origin[0][0])/dx, (oOF_theta2[0][0] - oOF_origin[0][0])/dx,
+             (oOF_theta3[0][0] - oOF_origin[0][0])/dx, (oOF_theta5[0][0] - oOF_origin[0][0])/dx,
+             (oOF_theta6[0][0] - oOF_origin[0][0])/dx, (oOF_theta7[0][0] - oOF_origin[0][0])/dx],
 
-            [oOF_theta1[1][0] - oOF_origin[1][0], oOF_theta2[1][0] - oOF_origin[1][0],
-             oOF_theta3[1][0] - oOF_origin[1][0], oOF_theta5[1][0] - oOF_origin[1][0],
-             oOF_theta6[1][0] - oOF_origin[1][0], oOF_theta7[1][0] - oOF_origin[1][0]],
+            [(oOF_theta1[1][0] - oOF_origin[1][0])/dx, (oOF_theta2[1][0] - oOF_origin[1][0])/dx,
+             (oOF_theta3[1][0] - oOF_origin[1][0])/dx, (oOF_theta5[1][0] - oOF_origin[1][0])/dx,
+             (oOF_theta6[1][0] - oOF_origin[1][0])/dx, (oOF_theta7[1][0] - oOF_origin[1][0])/dx],
 
-            [oOF_theta1[2][0] - oOF_origin[2][0], oOF_theta2[2][0] - oOF_origin[2][0],
-             oOF_theta3[2][0] - oOF_origin[2][0], oOF_theta5[2][0] - oOF_origin[2][0],
-             oOF_theta6[2][0] - oOF_origin[2][0], oOF_theta7[2][0] - pOF_origin[2][0]]]
+            [(oOF_theta1[2][0] - oOF_origin[2][0])/dx, (oOF_theta2[2][0] - oOF_origin[2][0])/dx,
+             (oOF_theta3[2][0] - oOF_origin[2][0])/dx, (oOF_theta5[2][0] - oOF_origin[2][0])/dx,
+             (oOF_theta6[2][0] - oOF_origin[2][0])/dx, (oOF_theta7[2][0] - pOF_origin[2][0])/dx]]
 
 
 # an example
-Ja = jacobian(theta1=0.1, theta2=0.1, theta3=0.1, theta5=0.1, theta6=0.1, theta7=0.1)
-p = [[0.1667], [-0.0348], [2.1772], [0.9801], [0.1982], [0.0100]]
-print(Ja)
-print('\n')
-delta_theta = [[0.01], [0.01], [0.01], [0.01], [0.01], [0.01]]
-delta_p = np.dot(Ja, delta_theta)
-print(delta_p)
-print('\n')
-print(p + delta_p)
+# Ja = jacobian(theta1=0.1, theta2=0.1, theta3=0.1, theta5=0.1, theta6=0.1, theta7=0.1)
+# p = [[216.7], [24.7], [217.77], [0.0297], [-0.1962], [0.9801]]
+#
+# print(Ja)
+# print('\n')
+# delta_theta = [[0.01], [0.01], [0.01], [0.01], [0.01], [0.01]]
+# delta_p = np.dot(Ja, delta_theta)
+# print(delta_p)
+# print('\n')
+# print(p + delta_p)
