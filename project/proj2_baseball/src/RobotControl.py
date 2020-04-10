@@ -35,8 +35,9 @@ def generateTraj(robotId, ballPos, targetPos):
     for i in range(240):
         traj.append([theta[0] * i / 240, theta[1] * i / 240, theta[2] * i / 240, 0, theta[3] * i / 240,
                      theta[4] * i / 240, theta[5] * i / 240, -pi / 2, -pi / 2])
-    for j in range(480):
-        delta_p = np.array([[0 / 240.], [100 * pi / 240.], [0 / 480.], [0 / 240.], [0 / 240.], [0 / 240.]])
+    for j in range(4800):
+        # set position step here
+        delta_p = np.array([[0.0 / 240.], [0.0 / 240.], [-100 / 480.], [0 / 240.], [0 / 240.], [0.0 / 240.]])
         Ja = Jacobian.jacobian(theta[0], theta[1], theta[2], theta[3], theta[4], theta[5])
         Ja = np.array(Ja)
         Jainv = np.linalg.inv(Ja)
