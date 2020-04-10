@@ -31,13 +31,13 @@ def generateTraj(robotId, ballPos, targetPos):
     delta_t = 1 / 2400
     # set an set of initial angle in case of singularity
     pi = 3.14159
-    theta = [0.0, pi / 4, pi / 4, 0.0, -pi / 2, 0.0]
+    theta = [pi / 6, pi / 6, pi / 6, pi / 6, pi / 6, pi / 6]
     for i in range(240):
         traj.append([theta[0] * i / 240, theta[1] * i / 240, theta[2] * i / 240, 0, theta[3] * i / 240,
                      theta[4] * i / 240, theta[5] * i / 240, -pi / 2, -pi / 2])
-    for j in range(4800):
+    for j in range(480):
         # set position step here
-        delta_p = np.array([[0.0 / 240.], [0.0 / 240.], [-100 / 480.], [0 / 240.], [0 / 240.], [0.0 / 240.]])
+        delta_p = np.array([[0.0 / 240.], [0.0 / 240.], [0.0 / 480.], [0.0 / 240.], [0.0 / 240.], [10.0 / 240.]])
         Ja = Jacobian.jacobian(theta[0], theta[1], theta[2], theta[3], theta[4], theta[5])
         Ja = np.array(Ja)
         Jainv = np.linalg.inv(Ja)
@@ -49,6 +49,11 @@ def generateTraj(robotId, ballPos, targetPos):
                  theta[4] + delta_theta[4][0],
                  theta[5] + delta_theta[5][0]
                  ]
+        print(delta_theta)
+        print(theta)
+        print(Ja)
+        print(Jainv)
+        print('\n')
         traj.append([theta[0], theta[1], theta[2], 0, theta[3],
                      theta[4], theta[5], -pi / 2, -pi / 2])
 

@@ -9,13 +9,13 @@ def jacobian(theta1, theta2, theta3, theta5, theta6, theta7):
     l5 = 162.4
     l6 = 162.4
 
-    A1 = -l32 * np.sin(theta2)
+    A1 = l32 * np.sin(theta2)
     A2 = l2 * np.cos(theta2) * np.cos(theta3) + l31 * np.sin(theta2) * np.cos(theta3) + \
-         l2 * np.sin(theta2) * np.sin(theta3) - l31 * np.sin(theta2) * np.sin(theta3)
+         l2 * np.sin(theta2) * np.sin(theta3) + l31 * np.sin(theta2) * np.sin(theta3)
     A3 = l2 * np.cos(theta2) * np.sin(theta3) + l31 * np.sin(theta2) * np.sin(theta3) - \
-         l2 * np.sin(theta2) * np.sin(theta3) + l31 * np.sin(theta2) * np.cos(theta3)
-    B2 = l32 * np.sin(theta3)
-    B3 = -l32 * np.cos(theta3)
+         l2 * np.sin(theta2) * np.cos(theta3) - l31 * np.sin(theta2) * np.cos(theta3)
+    B2 = -l32 * np.cos(theta3)
+    B3 = -l32 * np.sin(theta3)
     D1 = np.sin(theta2) * np.cos(theta3) - np.cos(theta2) * np.sin(theta3)
     D2 = np.sin(theta2) * np.sin(theta3) + np.cos(theta2) * np.cos(theta3)
 
@@ -56,13 +56,13 @@ def jacobian(theta1, theta2, theta3, theta5, theta6, theta7):
     Ja10 = A8 * np.cos(theta7) - G1 * l6 * np.cos(theta7) + A9 * np.sin(theta7)
     Ja11 = B8 * np.cos(theta7) + B9 * np.sin(theta7)
     Ja12 = -H1 * l6 * np.cos(theta7) + E8 * np.cos(theta7) + E9 * np.sin(theta7)
-    Ja13 = -I1 * l6 * np.sin(theta7)
+    Ja13 = -I1 * l6 * np.cos(theta7)
     Ja14 = 0
     Ja15 = 0
 
-    Ja20 = -A8 * np.sin(theta7) + G1 * l6 * np.sin(theta7) + A9 * np.sin(theta7)
+    Ja20 = -A8 * np.sin(theta7) + G1 * l6 * np.sin(theta7) + A9 * np.cos(theta7)
     Ja21 = -B8 * np.sin(theta7) + B9 * np.cos(theta7)
-    Ja22 = H1 * l6 * np.sin(theta7) - E8 * np.sin(theta7) + E9 * np.sin(theta7)
+    Ja22 = H1 * l6 * np.sin(theta7) - E8 * np.sin(theta7) + E9 * np.cos(theta7)
     Ja23 = I1 * l6 * np.sin(theta7)
     Ja24 = 0
     Ja25 = 0
@@ -105,8 +105,8 @@ def jacobian(theta1, theta2, theta3, theta5, theta6, theta7):
                         [Ja50, Ja51, Ja52, Ja53, Ja54, Ja55]])
 
     Jav = np.dot(WRF, Jav)
-    Jaomega = np.dot(WRF, Jaomega)
+    Jaw = np.dot(WRF, Jaomega)
 
-    Ja = np.concatenate((Jav, Jaomega))
+    Ja = np.concatenate((Jav, Jaw))
 
     return Ja
