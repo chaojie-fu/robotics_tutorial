@@ -3,9 +3,6 @@ import os
 import numpy as np
 import Helper
 import Jacobian
-import Jacobian_sym
-import Jacobian_simplified
-from sympy import *
 
 def load():
     # work in the following section to load your robot
@@ -41,7 +38,7 @@ def generateTraj(robotId, ballPos, targetPos):
     for j in range(2000):
         # set position step here
         delta_p = np.array([[0.0 / 240.], [0.0 / 240.], [0.0 / 480.], [0.0 / 240.], [0.0 / 240.], [0.0 / 240.]])
-        Ja = Jacobian_simplified.jacobian_simplified(theta[0], theta[1], theta[2], theta[3], theta[4], theta[5])
+        Ja = Jacobian.jacobian(theta[0], theta[1], theta[2], theta[3], theta[4], theta[5])
         Ja = np.array(Ja, dtype='float')
         Jainv = np.linalg.inv(Ja)
         delta_theta = np.dot(Jainv, delta_p)
