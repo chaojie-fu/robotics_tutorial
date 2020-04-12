@@ -1,10 +1,10 @@
 import numpy as np
 import math
 
+pi = 3.1415926
 theta1 = 0
 theta2 = 0
 theta3 = 0
-theta4 = 0
 theta5 = 0
 theta6 = 0
 theta7 = 0
@@ -19,7 +19,7 @@ APB = np.array([[162.4], [0], [0]])
 AtB = np.concatenate((ARB, APB), axis=1)
 ATB = np.concatenate((AtB, [[0, 0, 0, 1]]), axis=0)
 
-BRC = np.array([[1, 0, 0], [0, math.cos(theta3), math.sin(theta3)], [0, -math.sin(theta3), math.cos(theta3)]])
+BRC = np.array([[1, 0, 0], [0, math.cos(theta3), -math.sin(theta3)], [0, math.sin(theta3), math.cos(theta3)]])
 BPC = np.array([[-162.4], [0], [351]])
 BtC = np.concatenate((BRC, BPC), axis=1)
 BTC = np.concatenate((BtC, [[0, 0, 0, 1]]), axis=0)
@@ -43,3 +43,5 @@ PO = np.array([[0], [0], [0], [1]])
 
 pOF = np.dot(WTA, np.dot(ATB, np.dot(BTC, np.dot(CTD, np.dot(DTE, np.dot(ETF, PO))))))
 oOF = np.dot(WRA, np.dot(ARB, np.dot(BRC, np.dot(CRD, np.dot(DRE, np.dot(ERF, [[1], [0], [0]]))))))
+
+print(oOF)

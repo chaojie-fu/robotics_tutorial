@@ -9,7 +9,7 @@ def jacobian_sym(t1, t2, t3, t5, t6, t7):
 
     WRA = Matrix([[sy.cos(theta1), -sy.sin(theta1), 0], [sy.sin(theta1), sy.cos(theta1), 0], [0, 0, 1]])
     ARB = Matrix([[1, 0, 0], [0, sy.cos(theta2), -sy.sin(theta2)], [0, sy.sin(theta2), sy.cos(theta2)]])
-    BRC = Matrix([[1, 0, 0], [0, sy.cos(theta3), sy.sin(theta3)], [0, -sy.sin(theta3), sy.cos(theta3)]])
+    BRC = Matrix([[1, 0, 0], [0, sy.cos(theta3), -sy.sin(theta3)], [0, sy.sin(theta3), sy.cos(theta3)]])
     CRD = Matrix([[1, 0, 0], [0, sy.cos(theta5), -sy.sin(theta5)], [0, sy.sin(theta5), sy.cos(theta5)]])
     DRE = Matrix([[sy.cos(theta6), -sy.sin(theta6), 0], [sy.sin(theta6), sy.cos(theta6), 0], [0, 0, 1]])
     ERF = Matrix([[1, 0, 0], [0, sy.cos(theta7), -sy.sin(theta7)], [0, sy.sin(theta7), sy.cos(theta7)]])
@@ -187,3 +187,5 @@ def jacobian_sym(t1, t2, t3, t5, t6, t7):
             [Ja30, Ja31, Ja32, Ja33, Ja34, Ja35],
             [Ja40, Ja41, Ja42, Ja43, Ja44, Ja45],
             [Ja50, Ja51, Ja52, Ja53, Ja54, Ja55]]
+
+jacobian_sym(1, 1, 1, 1, 1, 1)

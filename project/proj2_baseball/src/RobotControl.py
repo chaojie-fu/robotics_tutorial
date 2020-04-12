@@ -40,7 +40,7 @@ def generateTraj(robotId, ballPos, targetPos):
                      theta[4] * i / 240, theta[5] * i / 240, -pi / 2, -pi / 2])
     for j in range(2000):
         # set position step here
-        delta_p = np.array([[0.0 / 240.], [0.0 / 240.], [10.0 / 480.], [0.0 / 240.], [0.0 / 240.], [0.0 / 240.]])
+        delta_p = np.array([[0.0 / 240.], [0.0 / 240.], [0.0 / 480.], [0.0 / 240.], [0.0 / 240.], [0.0 / 240.]])
         Ja = Jacobian_simplified.jacobian_simplified(theta[0], theta[1], theta[2], theta[3], theta[4], theta[5])
         Ja = np.array(Ja, dtype='float')
         Jainv = np.linalg.inv(Ja)
