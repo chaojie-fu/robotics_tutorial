@@ -20,6 +20,8 @@ env = Env()
 
 # load your robot here
 robotId = RobotControl.load()
+p.changeDynamics(robotId, 8, lateralFriction=10)
+p.changeDynamics(robotId, 9, lateralFriction=10)
 env.robotId = robotId
 
 # print joint info
@@ -75,8 +77,10 @@ for i in [1, 2, 4, 8]:
             p.setJointMotorControlArray(robotId, list(range(p.getNumJoints(robotId))),
                                         p.POSITION_CONTROL, targetPositions=traj[t])
         t += 1
-
         # end control
+    endPosition = p.getLinkState(robotId, 7)[0]
+    print('endPosition')
+    print(endPosition)
 
 if recordVideo:
     p.stopStateLogging(videoLogId)
