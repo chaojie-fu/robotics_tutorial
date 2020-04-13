@@ -47,14 +47,14 @@ def generateTraj(robotId, ballPos, targetPos):
     # set an set of initial angle in case of singularity
 
     theta = [Ball_theta + pi / 2, 0.0, 3 * pi / 4, 3 * pi / 4, pi / 2, 0]
-    for i in range(240):
-        traj.append([theta[0], theta[1] * i / 240, theta[2] * i / 240, 0, theta[3] * i / 240,
-                     theta[4] * i / 240, theta[5] * i / 240, 0.0, 0.0])
-    # move the catcher towards beyond the ball
-    # set position step here
+    for i in range(480):
+        traj.append([theta[0] * i / 480, theta[1] * i / 480, theta[2] * i / 480, 0, theta[3] * i / 480,
+                     theta[4] * i / 480, theta[5] * i / 480, 0.0, 0.0])
 
+    # set position step here
     step = 240
 
+    # move the catcher towards beyond the ball
     if True:
         theta1 = theta[0]
         theta2 = theta[1]
@@ -180,6 +180,7 @@ def generateTraj(robotId, ballPos, targetPos):
                      ]
             traj.append([theta[0], theta[1], theta[2], 0, theta[3], theta[4], theta[5], 0.0, 0.0])
 
+    # move down along the z axis towards the ball
     if True:
         theta1 = theta[0]
         theta2 = theta[1]
@@ -230,7 +231,7 @@ def generateTraj(robotId, ballPos, targetPos):
         CurrentY = pOF[1][0] / 1000
         CurrentZ = pOF[2][0] / 1000
         for i in range(step):
-            delta_p = np.array([[(ballPos[0] - CurrentX) * 1000 / step], [(ballPos[1] - CurrentY) * 1000 / step], [(1.28 - CurrentZ) * 1000 / step], [0.0 / 240.], [0.0 / 240.], [0.0 / 240.]])
+            delta_p = np.array([[(ballPos[0] - CurrentX) * 1000 / step], [(ballPos[1] - CurrentY) * 1000 / step], [(1.24 - CurrentZ) * 1000 / step], [0.0 / 240.], [0.0 / 240.], [0.0 / 240.]])
             Ja = Jacobian.jacobian(theta[0], theta[1], theta[2], theta[3], theta[4], theta[5])
             Ja = np.array(Ja, dtype='float')
             Jainv = np.linalg.inv(Ja)
@@ -243,7 +244,9 @@ def generateTraj(robotId, ballPos, targetPos):
                      theta[5] + delta_theta[5][0]
                      ]
             traj.append([theta[0], theta[1], theta[2], 0, theta[3], theta[4], theta[5], 0.0, 0.0])
-    AnglePara = 0.65
+
+    # grasp the ball
+    AnglePara = 0.90
     for i in range(100):
         traj.append([theta[0], theta[1], theta[2], 0, theta[3], theta[4], theta[5], pi / 2 * AnglePara, pi / 2 * AnglePara])
 
@@ -261,6 +264,8 @@ def generateTraj(robotId, ballPos, targetPos):
                  theta[5] + delta_theta[5][0]
                  ]
         traj.append([theta[0], theta[1], theta[2], 0, theta[3], theta[4], theta[5], pi / 2 * AnglePara, pi / 2 * AnglePara])
+
+
 
     return traj
 
