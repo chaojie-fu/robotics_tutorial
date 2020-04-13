@@ -231,7 +231,7 @@ def generateTraj(robotId, ballPos, targetPos):
         CurrentY = pOF[1][0] / 1000
         CurrentZ = pOF[2][0] / 1000
         for i in range(step):
-            delta_p = np.array([[(ballPos[0] - CurrentX) * 1000 / step], [(ballPos[1] - CurrentY) * 1000 / step], [(1.25 - CurrentZ) * 1000 / step], [0.0 / 240.], [0.0 / 240.], [0.0 / 240.]])
+            delta_p = np.array([[(ballPos[0] - CurrentX) * 1000 / step], [(ballPos[1] - CurrentY) * 1000 / step], [(1.28 - CurrentZ) * 1000 / step], [0.0 / 240.], [0.0 / 240.], [0.0 / 240.]])
             Ja = Jacobian.jacobian(theta[0], theta[1], theta[2], theta[3], theta[4], theta[5])
             Ja = np.array(Ja, dtype='float')
             Jainv = np.linalg.inv(Ja)
@@ -244,12 +244,12 @@ def generateTraj(robotId, ballPos, targetPos):
                      theta[5] + delta_theta[5][0]
                      ]
             traj.append([theta[0], theta[1], theta[2], 0, theta[3], theta[4], theta[5], 0.0, 0.0])
-
+    AnglePara = 0.65
     for i in range(100):
-        traj.append([theta[0], theta[1], theta[2], 0, theta[3], theta[4], theta[5], pi / 2 * 0.70, pi / 2 * 0.70])
+        traj.append([theta[0], theta[1], theta[2], 0, theta[3], theta[4], theta[5], pi / 2 * AnglePara, pi / 2 * AnglePara])
 
     for i in range(1000):
-        delta_p = np.array([[0], [0], [10 / 240], [0.0 / 240.], [0.0 / 240.], [0.0 / 240.]])
+        delta_p = np.array([[0], [0], [100 / 240], [0.0 / 240.], [0.0 / 240.], [0.0 / 240.]])
         Ja = Jacobian.jacobian(theta[0], theta[1], theta[2], theta[3], theta[4], theta[5])
         Ja = np.array(Ja, dtype='float')
         Jainv = np.linalg.inv(Ja)
@@ -261,7 +261,7 @@ def generateTraj(robotId, ballPos, targetPos):
                  theta[4] + delta_theta[4][0],
                  theta[5] + delta_theta[5][0]
                  ]
-        traj.append([theta[0], theta[1], theta[2], 0, theta[3], theta[4], theta[5], pi / 2 * 0.70, pi / 2 * 0.70])
+        traj.append([theta[0], theta[1], theta[2], 0, theta[3], theta[4], theta[5], pi / 2 * AnglePara, pi / 2 * AnglePara])
 
     return traj
 
