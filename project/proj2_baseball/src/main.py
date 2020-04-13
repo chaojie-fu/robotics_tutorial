@@ -10,18 +10,15 @@ import Helper
 p.connect(p.GUI)
 
 # video flag
-# test
 recordVideo = True
-prefix = time.strftime('%Y%m%d%H%M%S', time.localtime(time.time()))
+prefix = time.strftime('%Y%m%d%H%M%S',time.localtime(time.time()))
 
 # load the plane and the table
 # the height of table is 1.1
 env = Env()
 
 # load your robot here
-robotId = RobotControl.load()
-p.changeDynamics(robotId, 8, lateralFriction=10)
-p.changeDynamics(robotId, 9, lateralFriction=10)
+robotId, basePos = RobotControl.load()
 env.robotId = robotId
 
 # print joint info
@@ -43,7 +40,7 @@ for i in [1, 2, 4, 8]:
         p.resetJointState(robotId, jointId, 0)
 
     # init the baseball and avoid collision between baseball and the base of the robot arm
-    env.addBaseball()
+    env.addBaseball(basePos)
 
     # get random target
     env.setTarget(i)
@@ -59,28 +56,25 @@ for i in [1, 2, 4, 8]:
         # simulate
         p.stepSimulation()
         time.sleep(1/240)
-
+        
         # contact
         env.findContact()
 
-        # camera control 暂时关闭
-        # env.cameraControl(i)
+        # camera control
+        env.cameraControl(i)
 
         # score
         if env.contactBetweenBallAndGround:
             groundContactFlag = True
             env.recordDistance()
-
+            
         # control
         # work in this section
         if t < trajLength:
-            p.setJointMotorControlArray(robotId, list(range(p.getNumJoints(robotId))),
-                                        p.POSITION_CONTROL, targetPositions=traj[t])
+            p.setJointMotorControlArray(robotId, list(range(p.getNumJoints(robotId))), p.POSITION_CONTROL, targetPositions=traj[t])
         t += 1
+        
         # end control
-    endPosition = p.getLinkState(robotId, 7)[0]
-    print('endPosition')
-    print(endPosition)
 
 if recordVideo:
     p.stopStateLogging(videoLogId)

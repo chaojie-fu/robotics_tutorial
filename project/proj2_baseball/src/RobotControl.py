@@ -5,14 +5,13 @@ import Jacobian
 
 def load():
     # work in the following section to load your robot
-    # robotName = 'robotarm.urdf'
+    robotName = 'HextechCatcher.urdf'
     # robotPath = os.path.join('project', 'proj2_baseball', 'rsc', robotName)
-    # robotPath = Helper.findURDF(robotName)
     robotInitPos = [0.0, 0.0, 1.1]
     robotInitOrn = p.getQuaternionFromEuler([0, 0, 0])
-    robotId = p.loadURDF("../rsc/robotarm/urdf/robotarm.urdf", robotInitPos, robotInitOrn,
-                         useFixedBase=1)
-    return robotId
+    robotId = p.loadURDF("../rsc/robotarm/urdf/robotarm.urdf", robotInitPos, robotInitOrn, useFixedBase=1)
+    basePos = [-0.3, -0.3, 0.3, 0]
+    return robotId, basePos
 
 
 def generateTraj(robotId, ballPos, targetPos):

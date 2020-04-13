@@ -28,11 +28,13 @@ class Env(object):
         self.score = 0
         self.robotId = 100
     
-    def addBaseball(self):
-        basePos, _ = p.getBasePositionAndOrientation(self.robotId)
+    def addBaseball(self, basePos):
+        # basePos, _ = p.getBasePositionAndOrientation(self.robotId)
         randPos = [random.uniform(-0.3, 0.3), random.uniform(-0.3, 0.3), 1.1+0.04]
-        while np.linalg.norm(np.array(randPos[:2]) - np.array([basePos[:2]])) < 0.04:
-            randPos = [random.uniform(-0.5, 0.5), random.uniform(-0.5, 0.5), 1.1+0.04]
+        # while np.linalg.norm(np.array(randPos[:2]) - np.array([basePos[:2]])) < 0.04:
+        while randPos[0] > basePos[0] and randPos[0] < basePos[2] and randPos[1] > basePos[1] and randPos[1] < basePos[3]:
+            print(f'Illegal Position {randPos[:2]}!!! Getting new position ...')
+            randPos = [random.uniform(-0.3, 0.3), random.uniform(-0.3, 0.3), 1.1+0.04]
         
         print('Ball Position:')
         print(randPos)
