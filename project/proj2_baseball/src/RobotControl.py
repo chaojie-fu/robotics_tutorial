@@ -246,7 +246,7 @@ def generateTraj(robotId, ballPos, targetPos):
             traj.append([theta[0], theta[1], theta[2], 0, theta[3], theta[4], theta[5], 0.0, 0.0])
 
     # grasp the ball
-    AnglePara = 0.90
+    AnglePara = 0.65
     for i in range(100):
         traj.append([theta[0], theta[1], theta[2], 0, theta[3], theta[4], theta[5], pi / 2 * AnglePara, pi / 2 * AnglePara])
 
@@ -264,8 +264,6 @@ def generateTraj(robotId, ballPos, targetPos):
                  theta[5] + delta_theta[5][0]
                  ]
         traj.append([theta[0], theta[1], theta[2], 0, theta[3], theta[4], theta[5], pi / 2 * AnglePara, pi / 2 * AnglePara])
-
-
 
     return traj
 
