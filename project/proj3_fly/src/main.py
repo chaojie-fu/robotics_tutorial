@@ -7,7 +7,7 @@ import RobotControl
 
 # video flag
 recordVideo = True
-prefix = time.strftime('%Y%m%d%H%M%S', time.localtime(time.time()))
+prefix = time.strftime('%Y%m%d%H%M%S',time.localtime(time.time()))
 
 p.connect(p.GUI)
 p.setGravity(0.0, 0.0, -10.0)

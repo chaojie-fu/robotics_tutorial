@@ -7,7 +7,7 @@ def findURDF(fileName):
         relativePath = os.path.join('project', 'proj3_fly', 'rsc', fileName)
     elif cwd[-1] == 'project' and os.path.split(cwd[-2])[-1] == 'robotics_tutorials':
         relativePath = os.path.join('proj3_fly', 'rsc', fileName)
-    elif cwd[-1] == 'proj3_fly' and os.path.split(cwd[-2])[-1] == 'project':
+    elif cwd[-1] == 'proj3_fly':
         relativePath = os.path.join('rsc', fileName)
     elif cwd[-1] == 'src' and os.path.split(cwd[-2])[-1] == 'proj3_fly':
         relativePath = os.path.join('..', 'rsc', fileName)
@@ -23,7 +23,7 @@ def findLog(fileName):
         relativePath = os.path.join('project', 'proj3_fly', 'log', fileName)
     elif cwd[-1] == 'project' and os.path.split(cwd[-2])[-1] == 'robotics_tutorials':
         relativePath = os.path.join('proj3_fly', 'log', fileName)
-    elif cwd[-1] == 'proj3_fly' and os.path.split(cwd[-2])[-1] == 'project':
+    elif cwd[-1] == 'proj3_fly':
         relativePath = os.path.join('log', fileName)
     elif cwd[-1] == 'src' and os.path.split(cwd[-2])[-1] == 'proj3_fly':
         relativePath = os.path.join('..', 'log', fileName)
