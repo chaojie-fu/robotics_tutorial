@@ -32,7 +32,7 @@
         <parent link="HextechZaxis"/>
         <child link="HextechXaxis"/>
         <axis xyz="1.0 0.0 0.0"/>
-        <limit lower="-18" upper="16" effort="0.0" velocity="100.0"/>
+        <limit lower="-100" upper="100" effort="0.0" velocity="100.0"/>
     </joint>
 
     <link name="UAVbase">

@@ -10,7 +10,7 @@ def generateTraj(robotId):
 def realTimeControl(robotId, plan):
     # work in this function to calculate real time control signal
     # the output should be a list of two float
-    controlSignal = [0, 0]
+    controlSignal = [50, 50]
     # controlSignal = AnswerByTA.realTimeControl(robotId, plan)
     return controlSignal
 
