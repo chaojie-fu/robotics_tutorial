@@ -27,12 +27,14 @@ if recordVideo:
     videoLogId = p.startStateLogging(p.STATE_LOGGING_VIDEO_MP4, videoFile)
 
 t = 0
+n = 0
 while True:
     p.stepSimulation()
     time.sleep(1/240)
 
-    controlSignal = RobotControl.realTimeControl(env.robotId, plan)
+    controlSignal = RobotControl.realTimeControl(env.robotId, plan, n)
     env.control(controlSignal)
+    n = n + 1
 
     env.cameraControl()
     RobotControl.addDebugItems()
