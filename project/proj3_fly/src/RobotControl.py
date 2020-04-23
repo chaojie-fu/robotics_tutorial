@@ -33,9 +33,11 @@ def realTimeControl(robotId, plan, n):
     # get current state
     ref = getCondition(robotId)
 
+    # global control output
     uff1 = Global[0][n]
     uff2 = Global[1][n]
 
+    # feedback control output
     ufe = ErrorControl(Global[2][n] - ref[0], Global[3][n] - ref[1], Global[4][n] - ref[2],
                        Global[5][n] - ref[3], Global[6][n] - ref[4], Global[7][n] - ref[5])
     ufe1 = ufe[0]
