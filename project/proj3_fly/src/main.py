@@ -28,7 +28,7 @@ if recordVideo:
 
 t = 0
 n = 0
-n_max = 480
+n_max = 4800
 # real control output and state at all time
 real_state = [[startPos[0], 0, startPos[2], 0, 0, 0]]
 real_u = [[50, 50]]

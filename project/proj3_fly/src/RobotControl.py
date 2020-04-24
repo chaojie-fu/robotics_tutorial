@@ -9,7 +9,7 @@ def generateTraj(robotId):
     # the output can be in any data structure you like
     t = []
     t_step = 1 / 240.0
-    n_max = 480
+    n_max = 4800
     for i in range(n_max + 1):
         t.append(i * t_step)
 
@@ -17,11 +17,11 @@ def generateTraj(robotId):
     v = 10
     pi = 3.14159
     for i in range(n_max + 1):
-        x = -16.0 + i * v * t_step
-        y = 0.0
+        x = -16.0
+        y = 0.0 + i * v * t_step
         theta = pi / 12.0
-        v_x = v
-        v_y = 0
+        v_x = 0
+        v_y = v
         v_theta = 0
         plan.append([x, v_x, y, v_y, theta, v_theta])
     return plan
@@ -68,8 +68,8 @@ def optimal(robotId, plan, n, real_state, real_u):
     iyy = 0.68
     b = 0.3
     g = 10
-    Qi = 10
-    Ri = 1
+    Qi = 1
+    Ri = 10
     para = tuple([n])
 
     def objective(u, args=para):
@@ -77,6 +77,19 @@ def optimal(robotId, plan, n, real_state, real_u):
         t_max = para[0]
         obj_error = 0
         obj_control = 0
+
+        R = np.array([
+            [1, 0, 0, 0, 0, 0],
+            [0, 1, 0, 0, 0, 0],
+            [0, 0, 1, 0, 0, 0],
+            [0, 0, 0, 1, 0, 0],
+            [0, 0, 0, 0, 1, 0],
+            [0, 0, 0, 0, 0, 1]
+        ])
+        Q = np.array([
+            [1, 0],
+            [0, 1]
+        ])
         for i in range(t_max + 1):
             # plan state at i + 1 time point
             x_ref = np.array(plan[i + 1])
@@ -91,10 +104,12 @@ def optimal(robotId, plan, n, real_state, real_u):
                 t_step * x_real_state[5] + x_real_state[4],
                 t_step * b / iyy * (u[1] - u[0]) + x_real_state[5]
             ])
-            obj_error = obj_error + np.linalg.norm(x_ref - x_desire)
+            x_e = x_desire - x_ref
+            obj_error = obj_error + np.dot(x_e, np.dot(R, x_e.T))
 
         for i in range(t_max + 1):
-            obj_control = obj_control + np.linalg.norm([real_u[i][0], real_u[i][1]])
+            u_e = np.array([real_u[i][0], real_u[i][1]])
+            obj_control = obj_control + np.dot(u_e, np.dot(Q, u_e.T))
 
         obj = obj_error * Qi + obj_control * Ri
         return obj
@@ -118,12 +133,14 @@ def optimal(robotId, plan, n, real_state, real_u):
     u0[1] = 50.0
 
     # optimize
+    bb = (-100.0, 100.0)
+    bnds = (bb, bb)
     con1 = {'type': 'ineq', 'fun': constraint1}
     con2 = {'type': 'ineq', 'fun': constraint2}
     con3 = {'type': 'ineq', 'fun': constraint3}
     con4 = {'type': 'ineq', 'fun': constraint4}
     cons = ([con1, con2, con3, con4])
-    solution = minimize(objective, u0, method='SLSQP', constraints=cons)
+    solution = minimize(objective, u0, method='SLSQP', bounds=bnds, constraints=cons)
     u = solution.x
     print(u)
     return u
