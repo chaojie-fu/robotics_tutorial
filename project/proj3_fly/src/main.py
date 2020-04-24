@@ -28,14 +28,20 @@ if recordVideo:
 
 t = 0
 n = 0
-while True:
+n_max = 480
+# real control output and state at all time
+real_state = [[startPos[0], 0, startPos[2], 0, 0, 0]]
+real_u = [[50, 50]]
+
+while n <= n_max:
     p.stepSimulation()
     time.sleep(1/240)
-
-    controlSignal = RobotControl.realTimeControl(env.robotId, plan, n)
+    real_state.append(RobotControl.getCondition(env.robotId))
+    controlSignal = RobotControl.realTimeControl(env.robotId, plan, n, real_state, real_u)
+    real_u.append(controlSignal)
     env.control(controlSignal)
     n = n + 1
-
+    print(n)
     env.cameraControl()
     RobotControl.addDebugItems()
 
