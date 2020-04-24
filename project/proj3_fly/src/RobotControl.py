@@ -14,15 +14,17 @@ def generateTraj(robotId):
         t.append(i * t_step)
 
     plan = []
-    v = 10
+    vx = 10
+    vy = 0
+    omega = math.pi / 2
     pi = 3.14159
     for i in range(n_max + 1):
-        x = -16.0
-        y = 0.0 + i * v * t_step
-        theta = pi / 12.0
-        v_x = 0
-        v_y = v
-        v_theta = 0
+        x = -16.0 + i * vx * t_step
+        y = 0.0 + i * vy * t_step
+        theta = math.pi / 9
+        v_x = vx
+        v_y = vy
+        v_theta = 0.0
         plan.append([x, v_x, y, v_y, theta, v_theta])
     return plan
 
@@ -38,6 +40,7 @@ def realTimeControl(robotId, plan, n, real_state, real_u):
 
 def addDebugItems():
     # work in this function to add any debug visual items you need
+    p.addUserDebugLine([-16.0, 0, -100.0], [-16.0, 0, 100.0])
     pass
 
 
@@ -87,8 +90,8 @@ def optimal(robotId, plan, n, real_state, real_u):
             [0, 0, 0, 0, 0, 1]
         ])
         Q = np.array([
-            [1, 0],
-            [0, 1]
+            [50, 0],
+            [0, 50]
         ])
         for i in range(t_max + 1):
             # plan state at i + 1 time point
