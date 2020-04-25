@@ -113,8 +113,8 @@ def optimal(robotId, plan, n, real_state, real_u):
             [0, 0, 0, 0, 0, 1]
         ])
         Q = np.array([
-            [10, 0],
-            [0, 10]
+            [100, 0],
+            [0, 100]
         ])
         if t_max <= 8:
             for i in range(t_max + 1):
