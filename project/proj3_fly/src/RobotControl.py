@@ -12,15 +12,12 @@ def generateTraj(robotId):
     n_max = 960
     plan = []
     # down 2m
-    for i in range(n_max + 1):
-        t.append(i * t_step)
     vx = 0
-    vy = - 1
-    omega = math.pi / 2
-    for i in range(n_max + 1):
+    vy = -10
+    for i in range(96):
         x = -16.0 + i * vx * t_step
         y = 0.0 + i * vy * t_step
-        theta = 0.0
+        theta = 0
         v_x = vx
         v_y = vy
         v_theta = 0
@@ -44,7 +41,7 @@ def generateTraj(robotId):
     for i in range(n_max + 1):
         x = -14.0 + i * vx * t_step
         y = -4.0 + i * vy * t_step
-        theta = 0.0
+        theta = 0
         v_x = vx
         v_y = vy
         v_theta = 0
@@ -58,6 +55,10 @@ def realTimeControl(robotId, plan, n, real_state, real_u):
 
     # return u in format [u[0], u[1], real_state, real_u]
     u = optimal(robotId, plan, n, real_state, real_u)
+    x = getCondition(robotId)
+    x_desire = plan[n]
+    if n % 100 == 0:
+        print("State Error:", np.array(x) - np.array(x_desire))
     return u
 
 
@@ -76,17 +77,17 @@ def getCondition(robotId):
         linkState.append(position[4])
         if j == 2:
             v_x = position[6][0]
-            v_y = position[6][2]  # 世界坐标系中的z坐标
+            v_y = position[6][2]
         if j == 4:
             v_theta = position[7][1]
     x = linkState[2][0]
-    y = linkState[2][2]  # 世界坐标系中的z坐标
+    y = linkState[2][2]
     if (linkState[3][0] - linkState[4][0]) != 0:
         theta = np.arctan((linkState[4][2] - linkState[3][2]) / (linkState[3][0] - linkState[4][0]))
     else:
-        theta = math.pi / 2  # 当分母为零时，角度为pi/2
+        theta = math.pi / 2
     if (linkState[4][0] - linkState[3][0]) > 0:
-        theta = theta + math.pi  # 当四电机转到三电机前面时，即已经转过半圈了
+        theta = theta + math.pi
     return [x, v_x, y, v_y, theta, v_theta]
 
 
@@ -105,12 +106,12 @@ def optimal(robotId, plan, n, real_state, real_u):
         obj_control = 0
 
         R = np.array([
-            [1, 0, 0, 0, 0, 0],
-            [0, 1, 0, 0, 0, 0],
-            [0, 0, 1, 0, 0, 0],
-            [0, 0, 0, 1, 0, 0],
+            [10, 0, 0, 0, 0, 0],
+            [0, 0.5, 0, 0, 0, 0],
+            [0, 0, 10, 0, 0, 0],
+            [0, 0, 0, 0.5, 0, 0],
             [0, 0, 0, 0, 1, 0],
-            [0, 0, 0, 0, 0, 1]
+            [0, 0, 0, 0, 0, 0]
         ])
         Q = np.array([
             [100, 0],
@@ -177,7 +178,6 @@ def optimal(robotId, plan, n, real_state, real_u):
         return u[1] + 100.0
 
     # initial guesses
-    n = 2
     u0 = np.zeros(2)
     u0[0] = 50.0
     u0[1] = 50.0
@@ -192,5 +192,6 @@ def optimal(robotId, plan, n, real_state, real_u):
     cons = ([con1, con2, con3, con4])
     solution = minimize(objective, u0, method='SLSQP', bounds=bnds, constraints=cons)
     u = solution.x
-    print(u)
+    if n % 100 == 0:
+        print("Control Forces", u)
     return u
