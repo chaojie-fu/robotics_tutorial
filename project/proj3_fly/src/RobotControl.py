@@ -94,52 +94,28 @@ def optimal(robotId, plan, n, real_state, real_u):
             [1, 0],
             [0, 1]
         ])
-        if t_max <= 18:
-            for i in range(t_max + 1):
-                # plan state at i + 1 time point
-                x_ref = np.array(plan[i + 1])
+        for i in range(t_max + 1):
+            # plan state at i + 1 time point
+            x_ref = np.array(plan[i + 1])
 
-                # desired state at i + 1 time point
-                x_real_state = real_state[i]
-                x_desire = np.array([
-                    t_step * x_real_state[1] + x_real_state[0],
-                    t_step * np.sin(x_real_state[5]) / m * (u[0] + u[1]) + x_real_state[1],
-                    t_step * x_real_state[3] + x_real_state[2],
-                    t_step * (np.cos(x_real_state[5]) / m * (u[0] + u[1]) - g) + x_real_state[3],
-                    t_step * x_real_state[5] + x_real_state[4],
-                    t_step * b / iyy * (u[1] - u[0]) + x_real_state[5]
-                ])
-                x_e = x_desire - x_ref
-                obj_error = obj_error + np.dot(x_e, np.dot(R, x_e.T))
+            # desired state at i + 1 time point
+            x_real_state = real_state[i]
+            x_desire = np.array([
+                t_step * x_real_state[1] + x_real_state[0],
+                t_step * np.sin(x_real_state[5]) / m * (u[0] + u[1]) + x_real_state[1],
+                t_step * x_real_state[3] + x_real_state[2],
+                t_step * (np.cos(x_real_state[5]) / m * (u[0] + u[1]) - g) + x_real_state[3],
+                t_step * x_real_state[5] + x_real_state[4],
+                t_step * b / iyy * (u[1] - u[0]) + x_real_state[5]
+            ])
+            x_e = x_desire - x_ref
+            obj_error = obj_error + np.dot(x_e, np.dot(R, x_e.T))
 
-            for i in range(t_max + 1):
-                u_e = np.array([real_u[i][0], real_u[i][1]])
-                obj_control = obj_control + np.dot(u_e, np.dot(Q, u_e.T))
+        for i in range(t_max + 1):
+            u_e = np.array([real_u[i][0], real_u[i][1]])
+            obj_control = obj_control + np.dot(u_e, np.dot(Q, u_e.T))
 
-            obj = obj_error + obj_control
-        else:
-            for i in range(t_max - 18, t_max + 1):
-                # plan state at i + 1 time point
-                x_ref = np.array(plan[i + 1])
-
-                # desired state at i + 1 time point
-                x_real_state = real_state[i]
-                x_desire = np.array([
-                    t_step * x_real_state[1] + x_real_state[0],
-                    t_step * np.sin(x_real_state[5]) / m * (u[0] + u[1]) + x_real_state[1],
-                    t_step * x_real_state[3] + x_real_state[2],
-                    t_step * (np.cos(x_real_state[5]) / m * (u[0] + u[1]) - g) + x_real_state[3],
-                    t_step * x_real_state[5] + x_real_state[4],
-                    t_step * b / iyy * (u[1] - u[0]) + x_real_state[5]
-                ])
-                x_e = x_desire - x_ref
-                obj_error = obj_error + np.dot(x_e, np.dot(R, x_e.T))
-
-            for i in range(t_max - 18, t_max + 1):
-                u_e = np.array([real_u[i][0], real_u[i][1]])
-                obj_control = obj_control + np.dot(u_e, np.dot(Q, u_e.T))
-
-            obj = obj_error + obj_control
+        obj = obj_error + obj_control
         return obj
 
     def constraint1(u):
