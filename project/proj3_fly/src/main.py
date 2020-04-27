@@ -39,7 +39,7 @@ while True:
     controlSignal = RobotControl.realTimeControl(env.robotId, plan, n, real_state, real_u)
     real_u.append(controlSignal)
     env.control(controlSignal)
-    if n % 100 == 0:
+    if n % 10 == 0:
         print("time step: ", n, "\n")
     n = n + 1
     env.cameraControl()

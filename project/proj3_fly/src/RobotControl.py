@@ -1,7 +1,6 @@
 import pybullet as p
 import numpy as np
 from scipy.optimize import minimize
-import math
 
 
 def generateTraj(robotId):
@@ -13,34 +12,10 @@ def generateTraj(robotId):
     plan = []
     # down 2m
     vx = 0
-    vy = -10
-    for i in range(96):
+    vy = -1
+    for i in range(4800):
         x = -16.0 + i * vx * t_step
         y = 0.0 + i * vy * t_step
-        theta = 0
-        v_x = vx
-        v_y = vy
-        v_theta = 0
-        plan.append([x, v_x, y, v_y, theta, v_theta])
-
-    # stop
-    vx = 0
-    vy = 0
-    for i in range(n_max + 1):
-        x = -16.0 + i * vx * t_step
-        y = -4.0 + i * vy * t_step
-        theta = 0.0
-        v_x = vx
-        v_y = vy
-        v_theta = 0
-        plan.append([x, v_x, y, v_y, theta, v_theta])
-
-    # right 8m
-    vx = 2
-    vy = 0
-    for i in range(n_max + 1):
-        x = -14.0 + i * vx * t_step
-        y = -4.0 + i * vy * t_step
         theta = 0
         v_x = vx
         v_y = vy
@@ -55,10 +30,12 @@ def realTimeControl(robotId, plan, n, real_state, real_u):
 
     # return u in format [u[0], u[1], real_state, real_u]
     u = optimal(robotId, plan, n, real_state, real_u)
-    x = getCondition(robotId)
-    x_desire = plan[n]
-    if n % 100 == 0:
-        print("State Error:", np.array(x) - np.array(x_desire))
+    # u = pid(robotId, plan, n, real_state, real_u)
+    x_desire = getCondition(robotId)
+    x_ref = plan[n]
+    if n % 10 == 0:
+        print("State Error:", np.array(x_desire) - np.array(x_ref))
+        print("Control Forces", u)
     return u
 
 
@@ -85,9 +62,9 @@ def getCondition(robotId):
     if (linkState[3][0] - linkState[4][0]) != 0:
         theta = np.arctan((linkState[4][2] - linkState[3][2]) / (linkState[3][0] - linkState[4][0]))
     else:
-        theta = math.pi / 2
+        theta = np.pi / 2
     if (linkState[4][0] - linkState[3][0]) > 0:
-        theta = theta + math.pi
+        theta = theta + np.pi
     return [x, v_x, y, v_y, theta, v_theta]
 
 
@@ -106,18 +83,18 @@ def optimal(robotId, plan, n, real_state, real_u):
         obj_control = 0
 
         R = np.array([
-            [10, 0, 0, 0, 0, 0],
-            [0, 0.5, 0, 0, 0, 0],
-            [0, 0, 10, 0, 0, 0],
-            [0, 0, 0, 0.5, 0, 0],
+            [1, 0, 0, 0, 0, 0],
+            [0, 1, 0, 0, 0, 0],
+            [0, 0, 1, 0, 0, 0],
+            [0, 0, 0, 1, 0, 0],
             [0, 0, 0, 0, 1, 0],
-            [0, 0, 0, 0, 0, 0]
+            [0, 0, 0, 0, 0, 1]
         ])
         Q = np.array([
-            [100, 0],
-            [0, 100]
+            [1, 0],
+            [0, 1]
         ])
-        if t_max <= 8:
+        if t_max <= 18:
             for i in range(t_max + 1):
                 # plan state at i + 1 time point
                 x_ref = np.array(plan[i + 1])
@@ -141,7 +118,7 @@ def optimal(robotId, plan, n, real_state, real_u):
 
             obj = obj_error + obj_control
         else:
-            for i in range(t_max - 8, t_max + 1):
+            for i in range(t_max - 18, t_max + 1):
                 # plan state at i + 1 time point
                 x_ref = np.array(plan[i + 1])
 
@@ -158,7 +135,7 @@ def optimal(robotId, plan, n, real_state, real_u):
                 x_e = x_desire - x_ref
                 obj_error = obj_error + np.dot(x_e, np.dot(R, x_e.T))
 
-            for i in range(t_max - 8, t_max + 1):
+            for i in range(t_max - 18, t_max + 1):
                 u_e = np.array([real_u[i][0], real_u[i][1]])
                 obj_control = obj_control + np.dot(u_e, np.dot(Q, u_e.T))
 
@@ -179,19 +156,44 @@ def optimal(robotId, plan, n, real_state, real_u):
 
     # initial guesses
     u0 = np.zeros(2)
-    u0[0] = 50.0
-    u0[1] = 50.0
+    u0[0] = 30.0
+    u0[1] = 30.0
 
     # optimize
-    bb = (-100.0, 100.0)
-    bnds = (bb, bb)
     con1 = {'type': 'ineq', 'fun': constraint1}
     con2 = {'type': 'ineq', 'fun': constraint2}
     con3 = {'type': 'ineq', 'fun': constraint3}
     con4 = {'type': 'ineq', 'fun': constraint4}
     cons = ([con1, con2, con3, con4])
-    solution = minimize(objective, u0, method='SLSQP', bounds=bnds, constraints=cons)
+    solution = minimize(objective, u0, method='SLSQP', constraints=cons)
     u = solution.x
-    if n % 100 == 0:
-        print("Control Forces", u)
     return u
+
+
+def pid(robotId, plan, n, real_state, real_u):
+    t_step = 1 / 240.0
+    P_C = np.array(plan[n]) - real_state[n]
+    I_C = np.array([0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+    if n <= 18:
+        for i in range(n + 1):
+            I_C = I_C + t_step * (np.array(plan[i]) - np.array(real_state[i]))
+    else:
+        for i in range(n - 18, n + 1):
+            I_C = I_C + t_step * (np.array(plan[i]) - np.array(real_state[i]))
+    D_C = np.array([0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+    if n == 0:
+        pass
+    else:
+        D_C = ((np.array(plan[n]) - real_state[n]) - (np.array(plan[n - 1]) - real_state[n - 1])) / t_step
+
+    Kp1 = 1.0
+    Kp2 = 1.0
+    Ki1 = 0.0
+    Ki2 = 0.0
+    Kd1 = 0.0
+    Kd2 = 0.0
+
+    u1 = Kp1 * P_C[2] + Ki1 * I_C[2] + Kd1 * D_C[2] + 50.0
+    u2 = Kp2 * P_C[2] + Ki2 * I_C[2] + Kd2 * D_C[2] + 50.0
+
+    return [u1, u2]
