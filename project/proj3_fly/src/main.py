@@ -1,6 +1,7 @@
 import pybullet as p
 import time
 import Helper
+import numpy as np
 
 from Env import Env
 import RobotControl
@@ -39,11 +40,11 @@ while True:
     controlSignal = RobotControl.realTimeControl(env.robotId, plan, n, real_state, real_u)
     real_u.append(controlSignal)
     env.control(controlSignal)
+    env.cameraControl()
+    RobotControl.addDebugItems()
     if n % 10 == 0:
         print("time step: ", n, "\n")
     n = n + 1
-    env.cameraControl()
-    RobotControl.addDebugItems()
 
     t += 1/240
 
