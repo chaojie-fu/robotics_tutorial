@@ -7,8 +7,110 @@ from loadData import getPlan
 def generateTraj(robotId):
     # work in this function to make a plan before actual control
     # the output can be in any data structure you like
-    t_step = int(3.5120 * 240.0)
+
+    # Demo for scheduled movement
+    t_step = int(11.5218 * 240.0)
     plan = getPlan(t_step)
+
+    # Demo for vertical movement
+    # t_step = 1 / 240.0
+    # plan = []
+    # # accelerate
+    # for i in range(480):
+    #     plan.append([
+    #         -16.0,
+    #         0.0,
+    #         0.0 - 2.0 * i * (i / 480.0) * t_step,
+    #         -2.0 * i / 480.0,
+    #         0,
+    #         0
+    #     ])
+    # # slow down
+    # for i in range(480):
+    #     plan.append([
+    #         -16.0,
+    #         0,
+    #         -2.0 - 2.0 * i * ((480 - i) / 480) * t_step,
+    #         -2.0 * (480 - i) / 480.0,
+    #         0,
+    #         0
+    #     ])
+    # # stop
+    # for i in range(480):
+    #     plan.append([
+    #         -16.0,
+    #         0,
+    #         -4.0,
+    #         0,
+    #         0,
+    #         0
+    #     ])
+
+    # # Demo for horizontal movement
+    # t_step = 1 / 240.0
+    # plan = []
+    # # rotate pi / 12
+    # for i in range(40):
+    #     plan.append([
+    #             -16.0,
+    #             0.0,
+    #             0.0,
+    #             0.0,
+    #             np.pi / 12.0 * i / 40,
+    #             np.pi / 12.0 / 40
+    #         ])
+    # # move to right (accelerating)
+    # for i in range(480):
+    #     plan.append([
+    #             -16.0 + 2.679 / 2.0 * i * i * t_step * t_step,
+    #             0 + 2.679 * i * t_step,
+    #             0.0,
+    #             0.0,
+    #             np.pi / 12.0,
+    #             0.0
+    #         ])
+    # # rotate - pi / 6
+    # for i in range(40):
+    #     plan.append([
+    #             -10.642,
+    #             5.358,
+    #             0.0,
+    #             0.0,
+    #             np.pi / 12.0 - np.pi / 6.0 * i / 40,
+    #             -np.pi / 6.0 / 40
+    #         ])
+    # # move to right (slowing down)
+    # for i in range(480):
+    #     plan.append([
+    #             -10.642 - 2.679 / 2.0 * i * i * t_step * t_step + 5.358 * i * t_step,
+    #             5.358 - 2.679 * i * t_step,
+    #             0.0,
+    #             0.0,
+    #             -np.pi / 12.0,
+    #             0.0
+    #         ])
+    # # rotate pi / 12.0
+    # for i in range(40):
+    #     plan.append([
+    #             -5.284,
+    #             0.0,
+    #             0.0,
+    #             0.0,
+    #             -np.pi / 12.0 + np.pi / 12.0 * i / 40,
+    #             np.pi / 12.0 / 40
+    #         ])
+    # # stop
+    # for i in range(480):
+    #     plan.append([
+    #         -5.284,
+    #         0,
+    #         0.0,
+    #         0.0,
+    #         0.0,
+    #         0.0
+    #     ])
+
+
     return plan
 
 
@@ -63,10 +165,8 @@ def optimal(robotId, plan, n, real_state, real_u):
     iyy = 0.68
     b = 0.3
     g = 10
-    predict_step = 10
+    predict_step = 5
     para = tuple([n, predict_step])
-
-
 
     def objective(u, args=para):
         # calculate objective function
