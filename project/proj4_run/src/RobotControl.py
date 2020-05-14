@@ -2,7 +2,7 @@ import pybullet as p
 import Helper
 import time
 import numpy as np
-from MPC_controller import MPC
+from MPC_controller import Walk
 
 
 def loadRobot(initPos):
@@ -14,20 +14,15 @@ def loadRobot(initPos):
 def generateTraj(robotId):
     # work in this function to make a plan before actual control
     # the output can be in any data structure you like
-    steps = 1000
 
-    fy = []
-    theta = []
-    x = []
+    # landing period
+    landing_steps = 1000
+    theta_t = np.zeros(landing_steps)
+    x_t = np.zeros(landing_steps)
+    fy_t = np.zeros(landing_steps)
 
-    for i in range(92):
-        fy.append(0)
-        theta.append(0)
-        x.append(0)
-
-    plan = [np.zeros(steps), np.zeros(steps), np.zeros(steps)]
-    # plan = AnswerByTA.generateTraj(robotId)
-    return plan
+    plan = [theta_t, x_t, fy_t]
+    print(plan)
 
 
 def realTimeControl(robotId, plan, count):
@@ -39,7 +34,7 @@ def realTimeControl(robotId, plan, count):
     reference = plan[count: count+5]
     reference = np.transpose(reference)
     state = getstate(robotId)
-    mpc = MPC()
+    mpc = Walk()
     controlSignal = mpc.Solve(state, reference)
     # controlSignal = [0, 0]
     if count % 10 == 0:

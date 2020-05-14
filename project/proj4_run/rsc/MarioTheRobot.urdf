@@ -50,7 +50,7 @@
     <link name="body">
         <inertial>
             <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
-            <mass value="5.0"/>
+            <mass value="7.0"/>
             <inertia ixx="0.5" ixy="0.0" ixz="0.0" iyy="0.5" iyz="0.0" izz="0.5"/>
         </inertial>
         <visual>
@@ -79,8 +79,8 @@
     <link name="thigh">
         <inertial>
             <origin xyz="0.0 0.0 0.25" rpy="0.0 0.0 0.0"/>
-            <mass value="0.5"/>
-            <inertia ixx="0.05" ixy="0.0" ixz="0.0" iyy="0.05" iyz="0.0" izz="0.05"/>
+            <mass value="0.05"/>
+            <inertia ixx="0.05" ixy="0.0" ixz="0.0" iyy="0.0" iyz="0.0" izz="0.05"/>
         </inertial>
         <visual>
             <origin xyz="0.0 0.0 0.25" rpy="0.0 0.0 0.0"/>
@@ -104,8 +104,8 @@
     <link name="leg">
         <inertial>
             <origin xyz="0.0 0.0 0.25" rpy="0.0 0.0 0.0"/>
-            <mass value="0.5"/>
-            <inertia ixx="0.05" ixy="0.0" ixz="0.0" iyy="0.05" iyz="0.0" izz="0.05"/>
+            <mass value="0.05"/>
+            <inertia ixx="0.05" ixy="0.0" ixz="0.0" iyy="0.0" iyz="0.0" izz="0.05"/>
         </inertial>
         <visual>
             <origin xyz="0.0 0.0 0.25" rpy="0.0 0.0 0.0"/>
@@ -128,8 +128,8 @@
     <link name="wheel">
         <inertial>
             <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
-            <mass value="1.0"/>
-            <inertia ixx="0.5" ixy="0.0" ixz="0.0" iyy="0.5" iyz="0.0" izz="0.5"/>
+            <mass value="2.0"/>
+            <inertia ixx="0.5" ixy="0.0" ixz="0.0" iyy="0.0" iyz="0.0" izz="0.5"/>
         </inertial>
         <visual>
             <origin xyz="0.0 0.0 0.0" rpy="1.57 0.0 0.0"/>
