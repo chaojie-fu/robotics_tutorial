@@ -38,11 +38,13 @@ if recordVideo:
     videoLogId = p.startStateLogging(p.STATE_LOGGING_VIDEO_MP4, videoFile)
 
 t = 0
+count = 0
+
 while True:
     p.stepSimulation()
     time.sleep(1/240)
 
-    controlSignal = RobotControl.realTimeControl(env.robotId, plan)
+    controlSignal = RobotControl.realTimeControl(env.robotId, plan, count)
     env.control(controlSignal)
 
     env.cameraControl()
@@ -50,6 +52,7 @@ while True:
     env.checkBonus()
 
     t += 1/240
+    count += 1
 
     reachEnd = p.getContactPoints(bodyA=env.robotId, bodyB=env.targetId)
     if reachEnd:
