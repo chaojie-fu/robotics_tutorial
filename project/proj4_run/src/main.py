@@ -1,7 +1,6 @@
 import pybullet as p
 import time
 import Helper
-
 from Env import Env
 import RobotControl
 
@@ -38,6 +37,7 @@ if recordVideo:
     videoLogId = p.startStateLogging(p.STATE_LOGGING_VIDEO_MP4, videoFile)
 
 t = 0
+n = 0
 while True:
     p.stepSimulation()
     time.sleep(1/240)
@@ -49,7 +49,12 @@ while True:
     RobotControl.addDebugItems(env.robotId)
     env.checkBonus()
 
+    if n % 100 == 0:
+        state = RobotControl.getstate(robotId)
+        print(state)
+
     t += 1/240
+    n += 1
 
     reachEnd = p.getContactPoints(bodyA=env.robotId, bodyB=env.targetId)
     if reachEnd:

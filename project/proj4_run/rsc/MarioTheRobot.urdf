@@ -8,7 +8,7 @@
         </inertial>
     </link>
 
-    <joint name="World2XAxis" type="prismatic">
+    <joint name="World2XAxis" type="fixed">
         <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
         <axis xyz="1.0 0.0 0.0"/>
         <limit lower="-50.0" upper="50.0" effort="0.0"/>
@@ -24,7 +24,7 @@
         </inertial>
     </link>
 
-    <joint name="XAxis2ZAxis" type="prismatic">
+    <joint name="XAxis2ZAxis" type="fixed">
         <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
         <parent link="XAxis"/>
         <child link="ZAxis"/>
@@ -40,7 +40,7 @@
         </inertial>
     </link>
 
-    <joint name="ZAxis2body" type="continuous">
+    <joint name="ZAxis2body" type="fixed">
         <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
         <parent link="ZAxis"/>
         <child link="body"/>
