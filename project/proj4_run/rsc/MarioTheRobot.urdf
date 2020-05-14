@@ -93,7 +93,7 @@
         </visual>
     </link>
 
-    <joint name="engine1" type="fixed">
+    <joint name="engine1" type="continuous">
         <origin xyz="0.0 0.0 0.5" rpy="0.0 0.0 0.0"/>
         <parent link="thigh"/>
         <child link="leg"/>
