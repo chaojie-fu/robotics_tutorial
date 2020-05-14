@@ -40,7 +40,7 @@
         </inertial>
     </link>
 
-    <joint name="ZAxis2body" type="continuous">
+    <joint name="ZAxis2body" type="fixed">
         <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
         <parent link="ZAxis"/>
         <child link="body"/>
