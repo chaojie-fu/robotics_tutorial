@@ -40,7 +40,7 @@
         </inertial>
     </link>
 
-    <joint name="ZAxis2body" type="fixed">
+    <joint name="ZAxis2body" type="continuous">
         <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
         <parent link="ZAxis"/>
         <child link="body"/>
@@ -93,7 +93,7 @@
         </visual>
     </link>
 
-    <joint name="engine1" type="continuous">
+    <joint name="engine1" type="fixed">
         <origin xyz="0.0 0.0 0.5" rpy="0.0 0.0 0.0"/>
         <parent link="thigh"/>
         <child link="leg"/>
