@@ -2,7 +2,7 @@ import numpy as np
 from pyomo.environ import *  # 导入该模块所有函数
 from pyomo.dae import *
 
-N = 5  # forward predict steps
+N = 20  # forward predict steps
 ns = 6  # state numbers / here: {0: theta, 1: fy, 2: x, 3: v_theta, 4: v_fy, 5: v_x}
 na = 2  # actuator numbers /here: {0: M1, 1: M2}
 dt = 1/240
@@ -20,7 +20,7 @@ class Walk(object):
         # weight of item in objective function
         # {0: position error, 1:moment value, 2:rate of moment's change}
         m.wg = Param(RangeSet(0, 2), initialize={
-            0: 5000000, 1: 1, 2: 1}, mutable=True)
+            0: 1, 1: 0, 2: 0.01}, mutable=True)
 
         m.dt = Param(initialize=dt, mutable=True)
         m.mb = Param(initialize=7, mutable=True)
@@ -35,11 +35,11 @@ class Walk(object):
         m.s0 = Param(RangeSet(  # 初始值
             0, ns-1), initialize={0: 0., 1: 0., 2: 0., 3: 0., 4: 0., 5: 0.}, mutable=True)
         m.reference_x = Param(  # 参考x(t)
-            RangeSet(0, N-1), initialize={0: 0., 1: 0., 2: 0., 3: 0, 4: 0}, mutable=True)
+            RangeSet(0, N-1), initialize=dict.fromkeys(range(N), 0), mutable=True)
         m.reference_theta = Param(  # 参考theta(t)
-            RangeSet(0, N-1), initialize={0: -0.1, 1: -0.1, 2: -0.1, 3: -0.1, 4: -0.1}, mutable=True)
+            RangeSet(0, N-1), initialize=dict.fromkeys(range(N), 0), mutable=True)
         m.reference_fy = Param(  # 参考x(t)
-            RangeSet(0, N-1), initialize={0: 0.2, 1: 0.2, 2: 0.2, 3: 0.2, 4: 0.2}, mutable=True)
+            RangeSet(0, N-1), initialize=dict.fromkeys(range(N), 0), mutable=True)
 
         # Variables
         m.s = Var(RangeSet(0, ns-1), m.predict_step)
@@ -88,8 +88,9 @@ class Walk(object):
                                                              (m.l1*sin(m.s[0, k])*m.s[3, k]**2+m.l2*sin(m.s[0, k]+m.s[1, k])*((m.s[3, k]+m.s[4, k])*m.s[4, k]))*m.dt)
                                   if k < N-1 else Constraint.Skip)
         # Objective function
-        m.referenceobj = m.wg[0]*sum((m.s[2, k]-m.reference_x[k])
-                                     ** 2*1+(m.s[0, k]-m.reference_theta[k])**2*1+(m.s[1, k]-m.reference_fy[k])**2*1 for k in m.predict_step)
+        m.referenceobj = m.wg[0]*sum((m.s[2, k]-m.reference_x[k]) ** 2 * 1 +
+                                     (m.s[0, k]-m.reference_theta[k]) ** 2 * 1 +
+                                     (m.s[1, k]-m.reference_fy[k]) ** 2 * 1 for k in m.predict_step)
 
         m.M1obj = m.wg[1]*sum(m.M1[k]**2 for k in m.minus_1_predict_step)
         m.M2obj = m.wg[1]*sum(m.M2[k]**2 for k in m.minus_1_predict_step)
