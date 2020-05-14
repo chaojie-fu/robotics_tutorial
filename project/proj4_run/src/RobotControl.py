@@ -14,15 +14,21 @@ def loadRobot(initPos):
 def generateTraj(robotId):
     # work in this function to make a plan before actual control
     # the output can be in any data structure you like
+    steps = 1000
 
-    # landing period
-    landing_steps = 1000
-    theta_t = np.zeros(landing_steps)
-    x_t = np.zeros(landing_steps)
-    fy_t = np.zeros(landing_steps)
+    fy = []
+    theta = []
+    x = []
 
-    plan = [theta_t, x_t, fy_t]
-    print(plan)
+    for i in range(steps):
+        fy.append(np.pi / 2)
+        theta.append(-np.pi / 4)
+        x.append(0)
+
+    # plan = [reference_theta, reference_x, reference_fy
+    plan = [np.array(theta), np.array(x), np.array(fy)]
+    # plan = AnswerByTA.generateTraj(robotId)
+    return plan
 
 
 def realTimeControl(robotId, plan, count):

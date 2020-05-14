@@ -18,6 +18,7 @@ class Walk(object):
 
         # Parameters
         # weight of item in objective function
+        # {0: position error, 1:moment value, 2:rate of moment's change}
         m.wg = Param(RangeSet(0, 2), initialize={
             0: 5000000, 1: 1, 2: 1}, mutable=True)
 
@@ -70,9 +71,8 @@ class Walk(object):
                                       (m.M1[k]+m.M2[k])*m.dt == m.mb*((m.s[3, k+1]-m.s[3, k])*(m.Ib/m.mb+m.l1**2) +
                                                                       (m.s[4, k+1]-m.s[4, k])*(m.Ib/m.mb+m.l1*m.l2*cos(m.s[1, k])) +
                                                                       (m.s[5, k+1]-m.s[5, k])*m.l1*cos(m.s[0, k]) +
-                                                                      (m.l1*m.s[5, k]*m.s[4, k]*cos(m.s[0, k]+m.s[1, k]) -
-                                                                       m.l1*m.l2*(m.s[4, k]) ** 2 * sin(m.s[1, k]) -
-                                                                       m.l1*m.g*sin(m.s[0, k]))*m.dt)
+                                                                      (m.l1*m.s[5, k]*m.s[4, k]*cos(m.s[0, k]+m.s[1, k])-m.l1*m.l2*(
+                                                                          m.s[4, k])**2*sin(m.s[1, k])-m.l1*m.g*sin(m.s[0, k]))*m.dt)
                                       if k < N-1 else Constraint.Skip)
         m.v_fy_update = Constraint(m.predict_step, rule=lambda m, k:
                                    m.M1[k]*m.dt == m.mb*((m.s[3, k+1]-m.s[3, k])*(m.Ib/m.mb+m.l1*m.l2*cos(m.s[1, k])) +
@@ -88,9 +88,8 @@ class Walk(object):
                                                              (m.l1*sin(m.s[0, k])*m.s[3, k]**2+m.l2*sin(m.s[0, k]+m.s[1, k])*((m.s[3, k]+m.s[4, k])*m.s[4, k]))*m.dt)
                                   if k < N-1 else Constraint.Skip)
         # Objective function
-        m.referenceobj = m.wg[0]*sum((m.s[2, k] - m.reference_x[k]) ** 2 +
-                                     (m.s[0, k] - m.reference_theta[k]) ** 2 +
-                                     (m.s[1, k] - m.reference_fy[k]) ** 2 for k in m.predict_step)
+        m.referenceobj = m.wg[0]*sum((m.s[2, k]-m.reference_x[k])
+                                     ** 2*1+(m.s[0, k]-m.reference_theta[k])**2*1+(m.s[1, k]-m.reference_fy[k])**2*1 for k in m.predict_step)
 
         m.M1obj = m.wg[1]*sum(m.M1[k]**2 for k in m.minus_1_predict_step)
         m.M2obj = m.wg[1]*sum(m.M2[k]**2 for k in m.minus_1_predict_step)
@@ -104,18 +103,8 @@ class Walk(object):
         self.iN = m  # .create_instance()
 
     def Solve(self, state, reference):
-        # self.iN.s0.reconstruct(
-        #     {0: state[0], 1: state[1], 2: state[2], 3: state[3], 4: state[4], 5: state[5]})  # 输入当前状态值
-        # self.iN.reference_theta.reconstruct(
-        #     {0: reference[0, 0], 1: reference[0, 1], 2: reference[0, 2], 2: reference[0, 3], 2: reference[0, 4]})
-        # self.iN.reference_x.reconstruct(
-        #     {0: reference[1, 0], 1: reference[1, 1], 2: reference[1, 2], 2: reference[0, 3], 2: reference[0, 4]})
-        # self.iN.reference_fy.reconstruct(
-        #     {0: reference[2, 0], 1: reference[2, 1], 2: reference[2, 2], 2: reference[0, 3], 2: reference[0, 4]})
-        # self.iN.s0_update.reconstruct()  # 将当前状态值作为迭代初始值
-
         self.iN.s0.reconstruct(
-            {0: state[0], 1: state[1], 2: state[2], 3: state[3], 4: state[4]})  # 输入当前状态值
+            {0: state[0], 1: state[1], 2: state[2], 3: state[3], 4: state[4], 5: state[5]})  # 输入当前状态值
         self.iN.reference_theta.reconstruct(
             {0: reference[0, 0], 1: reference[0, 1], 3: reference[0, 2], 4: reference[0, 3]})
         self.iN.reference_x.reconstruct(
