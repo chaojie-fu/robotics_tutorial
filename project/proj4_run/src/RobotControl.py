@@ -21,8 +21,8 @@ def generateTraj(robotId):
     x = []
 
     for i in range(steps):
-        fy.append(np.pi / 2)
-        theta.append(-np.pi / 4)
+        fy.append(0)
+        theta.append(0)
         x.append(0)
 
     # plan = [reference_theta, reference_x, reference_fy
@@ -37,11 +37,11 @@ def realTimeControl(robotId, plan, count):
     start = time.time()
 
     plan = np.transpose(plan)
-    reference = plan[count: count+5]
+    reference = plan[count: count+6]
     reference = np.transpose(reference)
     state = getstate(robotId)
-    mpc = Walk()
-    controlSignal = mpc.Solve(state, reference)
+    mpc = Walk(state, reference)
+    controlSignal = mpc.Solve()
     # controlSignal = [0, 0]
     if count % 10 == 0:
         print('Count   ', count)

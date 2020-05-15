@@ -6,7 +6,7 @@ from Env import Env
 import RobotControl
 
 # video flag
-recordVideo = True
+recordVideo = False
 prefix = time.strftime('%Y%m%d%H%M%S', time.localtime(time.time()))
 
 p.connect(p.GUI)
