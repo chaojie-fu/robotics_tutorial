@@ -59,7 +59,7 @@ class Env(object):
     def cameraControl(self):
         # control camera
         robotPos = p.getLinkState(self.robotId, 2)[0]
-        p.resetDebugVisualizerCamera(10.0, 0.0, 0.0, robotPos)
+        p.resetDebugVisualizerCamera(5.0, 0.0, 0.0, robotPos)
 
     def setMotorName(self, name):
         if len(name) > 2:
