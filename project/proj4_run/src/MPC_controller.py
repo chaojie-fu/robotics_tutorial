@@ -131,8 +131,7 @@ class Walk:
         m.sM1obj = m.wg[4]*sum((m.M1[k+1]-m.M1[k])**2 for k in m.minus_2_predict_step)
         m.sM2obj = m.wg[4]*sum((m.M2[k+1]-m.M2[k])**2 for k in m.minus_2_predict_step)
 
-        m.obj = Objective(expr=m.referenceObj +
-                          m.M1obj+m.M2obj+m.sM1obj+m.sM2obj, sense=minimize)
+        m.obj = Objective(expr=m.referenceObj + m.M1obj+m.M2obj+m.sM1obj+m.sM2obj, sense=minimize)
 
         self.iN = m  # .create_instance()
 

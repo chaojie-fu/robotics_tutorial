@@ -14,7 +14,7 @@ def loadRobot(initPos):
 def generateTraj(robotId):
     # work in this function to make a plan before actual control
     # the output can be in any data structure you like
-    landing_steps = 10000
+    landing_steps = 200
     fy = []
     theta = []
     x = []
@@ -22,6 +22,12 @@ def generateTraj(robotId):
         fy.append(0)
         theta.append(0)
         x.append(0)
+
+    forward_step = 1000
+    for i in range(forward_step):
+        fy.append(0)
+        theta.append(0.3)
+        x.append(i / forward_step / 3)
 
     # plan = [reference_theta, reference_x, reference_fy]
     plan = [np.array(theta), np.array(fy), np.array(x)]
@@ -33,7 +39,7 @@ def realTimeControl(robotId, plan, count):
     # the output should be a list of two float
     start = time.time()
 
-    predict_step = 10
+    predict_step = 20
     plan = np.transpose(plan)
     reference = plan[count: count + predict_step]
     reference = np.transpose(reference)
@@ -56,6 +62,7 @@ def realTimeControl(robotId, plan, count):
 
 def addDebugItems(robotId):
     # work in this function to add any debug visual items you need
+    p.addUserDebugLine((0.0, 0.0, 0.0), (0.0, 0.0, -10.0), lineWidth=1, parentObjectUniqueId=robotId, parentLinkIndex=5)
     pass
 
 
