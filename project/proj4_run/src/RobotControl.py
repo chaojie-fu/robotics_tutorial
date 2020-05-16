@@ -23,18 +23,30 @@ def generateTraj(robotId):
         theta.append(0)
         x.append(0)
 
-    # forward_step = 1000
-    # for i in range(forward_step):
+    forward_step = 1000
+    for i in range(forward_step):
+        fy.append(0)
+        theta.append(0.2)
+        x.append(i / forward_step)
+
+    # bending_step = 200
+    # for i in range(bending_step):
+    #     fy.append(np.pi / 2 * i / bending_step)
+    #     theta.append(- np.pi / 4 * i / bending_step)
+    #     x.append(0)
+    #
+    # stretching_step = 5
+    # omega = np.pi / 4
+    # for i in range(stretching_step):
+    #     fy.append(np.pi / 2 - 2 * omega * i / stretching_step)
+    #     theta.append(-np.pi / 4 + omega * i / stretching_step)
+    #     x.append(0)
+    #
+    # wait_step = 1000
+    # for i in range(wait_step):
     #     fy.append(0)
-    #     theta.append(0.3)
-    #     x.append(i / forward_step / 3)
-
-    bending_step = 1000
-    for i in range(bending_step):
-        fy.append(np.pi / 2 * i / bending_step)
-        theta.append(- np.pi / 4 * i / bending_step)
-        x.append(0)
-
+    #     theta.append(0)
+    #     x.append(0)
     # plan = [reference_theta, reference_x, reference_fy]
     plan = [np.array(theta), np.array(fy), np.array(x)]
     return plan
@@ -45,7 +57,7 @@ def realTimeControl(robotId, plan, count):
     # the output should be a list of two float
     start = time.time()
 
-    predict_step = 20
+    predict_step = 10
     plan = np.transpose(plan)
     reference = plan[count: count + predict_step]
     reference = np.transpose(reference)

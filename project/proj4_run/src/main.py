@@ -42,6 +42,7 @@ count = 0
 
 while True:
     p.stepSimulation()
+    p.changeDynamics(robotId, 5, lateralFriction=2)
     time.sleep(1/240)
 
     controlSignal = RobotControl.realTimeControl(env.robotId, plan, count)
