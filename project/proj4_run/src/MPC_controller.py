@@ -5,8 +5,8 @@ from pyomo.dae import *
 
 class Walk:
     def __init__(self, state, reference):
-        # state be a 1 * 6 array
-        # reference be a 3 * predict_step array, which concludes theta fy and x reference
+        # state be a 1 * 8 array
+        # reference be a 4 * predict_step array, which concludes theta fy and x reference
         m = ConcreteModel()
         length4reference = np.size(reference, 1)
         m.predict_step = RangeSet(1, length4reference)
@@ -49,7 +49,7 @@ class Walk:
         m.reference_x = Param(m.predict_step, initialize=ref4x)
 
         # Variables
-        # m.s: {1: theta, 2: fy, 3: x, 4: v_theta, 5: v_fy, 6:v_x}
+        # m.s: {1: theta, 2: fy, 3: x, 4: v_theta, 5: v_fy, 6: v_x}
         m.s = Var(m.State, m.predict_step)
         m.M1 = Var(m.predict_step, bounds=(-250, 250))
         m.M2 = Var(m.predict_step, bounds=(-250, 250))
@@ -141,3 +141,87 @@ class Walk:
         M1 = -self.iN.M1[1]()
         M2 = self.iN.M2[1]()
         return [M1, M2]
+
+
+class Fly:
+    def __init__(self, state, reference):
+        # state be a 1 * 8 array
+        # reference be a 3 * predict_step array, which concludes theta fy and x reference
+        m = ConcreteModel()
+        length4reference = np.size(reference, 1)
+        m.predict_step = RangeSet(1, length4reference)
+        m.minus_1_predict_step = RangeSet(1, length4reference - 1)
+        m.minus_2_predict_step = RangeSet(1, length4reference - 2)
+        m.State = RangeSet(1, 8)
+
+        # TODO: check Parameter Part
+        # Parameters
+        # weight of item in objective function
+        # {0: theta position error, 1: fy position error,2: x position error,
+        #  3: moment value, 4: rate of moment's change}
+        m.wg = Param(RangeSet(0, 4), initialize={0: 10, 1: 10, 2: 1, 3: 0.00001, 4: 0})
+
+        m.dt = 1 / 240.0
+        m.mb = 7
+        m.M = 2
+        m.Ib = 0.5
+        m.Ir = 0.5
+        m.g = 10
+        m.l1 = 0.5
+        m.l2 = 0.5
+        m.r = 0.2
+
+        m.s0 = Param(m.State, initialize={1: state[0], 2: state[1], 3: state[2], 4: state[3],
+                                          5: state[4], 6: state[5], 7: state[6], 8: state[7]})
+
+        ref4theta = {}
+        for i in m.predict_step:
+            ref4theta[i] = reference[0][i - 1]
+        m.reference_theta = Param(m.predict_step, initialize=ref4theta)
+
+        ref4fy = {}
+        for i in m.predict_step:
+            ref4fy[i] = reference[1][i - 1]
+        m.reference_fy = Param(m.predict_step, initialize=ref4fy)
+
+        ref4x = {}
+        for i in m.predict_step:
+            ref4x[i] = reference[2][i - 1]
+        m.reference_x = Param(m.predict_step, initialize=ref4x)
+
+        ref4y = {}
+        for i in m.predict_step:
+            ref4y[i] = reference[3][i - 1]
+        m.reference_x = Param(m.predict_step, initialize=ref4y)
+
+        # Variables
+        # m.s: {1: theta, 2: fy, 3: x, 4: v_theta, 5: v_fy, 6: v_x, 7: y, 8: v_y}
+        m.s = Var(m.State, m.predict_step)
+        m.M1 = Var(m.predict_step, bounds=(-250, 250))
+        m.M2 = Var(m.predict_step, bounds=(-250, 250))
+
+        # Constraints
+        def rule_s(model, i):
+            return m.s[i, 1] == m.s0[i]
+        m.s0_update = Constraint(m.State, rule=rule_s)
+
+        def rule_theta(model, i):
+            return m.s[1, i + 1] == m.s[1, i] + m.s[4, i] * m.dt
+        m.theta_update = Constraint(m.minus_1_predict_step, rule=rule_theta)
+
+        def rule_fy(model, i):
+            return m.s[2, i + 1] == m.s[2, i] + m.s[5, i] * m.dt
+        m.fy_update = Constraint(m.minus_1_predict_step, rule=rule_fy)
+
+        def rule_x(model, i):
+            return m.s[3, i + 1] == m.s[3, i] + m.s[6, i] * m.dt
+        m.x_update = Constraint(m.minus_1_predict_step, rule=rule_x)
+
+        def rule_y(model, i):
+            return m.s[7, i + 1] == m.s[7, i] + m.s[8, i] * m.dt
+        m.y_update = Constraint(m.minus_1_predict_step, rule=rule_y)
+
+        def rule_v_x(model, i):
+            return
+
+

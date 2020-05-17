@@ -3,6 +3,7 @@ import Helper
 import time
 import numpy as np
 from MPC_controller import Walk
+from MPC_controller import Fly
 
 
 def loadRobot(initPos):
@@ -18,22 +19,26 @@ def generateTraj(robotId):
     fy = []
     theta = []
     x = []
+    y = []
     for i in range(landing_steps):
         fy.append(0)
         theta.append(0)
         x.append(0)
+        y.append(0.05)
 
     forward_step = 1000
     for i in range(forward_step):
         fy.append(0)
         theta.append(0.2)
         x.append(i / forward_step)
+        y.append(0.05)
 
     # bending_step = 200
     # for i in range(bending_step):
     #     fy.append(np.pi / 2 * i / bending_step)
     #     theta.append(- np.pi / 4 * i / bending_step)
     #     x.append(0)
+    #     y.append(0.05)
     #
     # stretching_step = 5
     # omega = np.pi / 4
@@ -41,12 +46,14 @@ def generateTraj(robotId):
     #     fy.append(np.pi / 2 - 2 * omega * i / stretching_step)
     #     theta.append(-np.pi / 4 + omega * i / stretching_step)
     #     x.append(0)
+    #     y.append(0.05)
     #
     # wait_step = 1000
     # for i in range(wait_step):
     #     fy.append(0)
     #     theta.append(0)
     #     x.append(0)
+    #     y.append(0.05)
     # plan = [reference_theta, reference_x, reference_fy]
     plan = [np.array(theta), np.array(fy), np.array(x)]
     return plan
@@ -81,7 +88,7 @@ def realTimeControl(robotId, plan, count):
 def addDebugItems(robotId):
     # work in this function to add any debug visual items you need
     p.addUserDebugLine((0.0, 0.0, 0.0), (0.0, 0.0, -10.0), lineWidth=1, parentObjectUniqueId=robotId, parentLinkIndex=5)
-    pass
+    p.addUserDebugLine((0.0, 0.0, 0.05), (2.0, 0.0, 0.05), lineWidth=1)
 
 
 def getstate(robotId):
@@ -105,5 +112,7 @@ def getstate(robotId):
     v_fy = jointState_0[1]
     x = pos_wheel[0][0]
     v_x = pos_wheel[6][0]
+    y = -pos_wheel[0][2]
+    v_y = -pos_wheel[6][2]
 
-    return [theta, fy, x, v_theta, v_fy, v_x]
+    return [theta, fy, x, v_theta, v_fy, v_x, y, v_y]
