@@ -2,6 +2,7 @@ import pybullet as p
 import Helper
 import time
 import numpy as np
+import math
 from MPC_controller import Walk
 from MPC_controller import Fly
 
@@ -24,14 +25,14 @@ def generateTraj(robotId):
         fy.append(0)
         theta.append(0)
         x.append(0)
-        y.append(0.05)
+        y.append(0)
 
-    forward_step = 1000
-    for i in range(forward_step):
-        fy.append(0)
-        theta.append(0.2)
-        x.append(i / forward_step)
-        y.append(0.05)
+    # forward_step = 1000
+    # for i in range(forward_step):
+    #     fy.append(0)
+    #     theta.append(0.2)
+    #     x.append(i / forward_step)
+    #     y.append(0.05)
 
     # bending_step = 200
     # for i in range(bending_step):
@@ -55,7 +56,7 @@ def generateTraj(robotId):
     #     x.append(0)
     #     y.append(0.05)
     # plan = [reference_theta, reference_x, reference_fy]
-    plan = [np.array(theta), np.array(fy), np.array(x)]
+    plan = [np.array(theta), np.array(fy), np.array(x), np.array(y)]
     return plan
 
 
@@ -69,7 +70,8 @@ def realTimeControl(robotId, plan, count):
     reference = plan[count: count + predict_step]
     reference = np.transpose(reference)
     state = getstate(robotId)
-    mpc = Walk(state, reference)
+    mpc = Fly(state, reference)
+    # mpc = Walk(state, reference)
     controlSignal = mpc.Solve()
     # controlSignal = [0, 0]
     if count % 10 == 0:
@@ -104,9 +106,10 @@ def getstate(robotId):
 
     pos_wheel = p.getLinkState(robotId, 5, 1)
     pos_leg = p.getLinkState(robotId, 4, 1)
-    Euler_leg = p.getEulerFromQuaternion(pos_leg[1])
+    Euler_leg = Quaternion2Angle(pos_leg[1])
+    Euler_wheel = Quaternion2Angle(pos_wheel[1])
 
-    theta = Euler_leg[1]
+    theta = Euler_leg
     v_theta = pos_leg[7][1]
     fy = jointState_0[0]
     v_fy = jointState_0[1]
@@ -114,5 +117,23 @@ def getstate(robotId):
     v_x = pos_wheel[6][0]
     y = -pos_wheel[0][2]
     v_y = -pos_wheel[6][2]
+    alpha = Euler_wheel
+    v_alpha = pos_wheel[7][1]
 
-    return [theta, fy, x, v_theta, v_fy, v_x, y, v_y]
+    return [theta, fy, x, v_theta, v_fy, v_x, y, v_y, alpha, v_alpha]
+
+
+def Quaternion2Angle(quaternion):
+    a1 = quaternion[0]
+    a3 = quaternion[2]
+    if a1 == 0:
+        angle = np.pi
+    elif a1 > 0:
+        if a3 >= 0:
+            angle = -2 * np.arctan(a3 / a1)
+        else:
+            angle = 2 * np.arctan(- a3 / a1)
+    else:
+        angle = 2 * np.arctan(- a3 / a1)
+    return angle
+
