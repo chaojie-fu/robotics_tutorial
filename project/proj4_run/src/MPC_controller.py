@@ -19,7 +19,7 @@ class Walk:
         # weight of item in objective function
         # {0: theta position error, 1: fy position error,2: x position error,
         #  3: moment value, 4: rate of moment's change}
-        m.wg = Param(RangeSet(0, 4), initialize={0: 10, 1: 10, 2: 1, 3: 0.00001, 4: 0})
+        m.wg = Param(RangeSet(0, 4), initialize={0: 10, 1: 10, 2: 0, 3: 0.00001, 4: 0})
 
         m.dt = 1/240.0
         m.mb = 7

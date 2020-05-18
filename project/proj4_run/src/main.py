@@ -26,8 +26,6 @@ env = Env(robotId, targetPos)
 env.setMotorName(motorName)
 env.addBonusBlock()
 
-plan = RobotControl.generateTraj(env.robotId)
-
 # print infomation for all the joints
 for jointId in range(p.getNumJoints(env.robotId)):
     print(p.getJointInfo(env.robotId, jointId))
@@ -45,7 +43,7 @@ while True:
     p.changeDynamics(robotId, 5, lateralFriction=2)
     time.sleep(1/240)
 
-    controlSignal = RobotControl.realTimeControl(env.robotId, plan, count)
+    controlSignal = RobotControl.realTimeControl(env.robotId, count)
     env.control(controlSignal)
 
     env.cameraControl()
