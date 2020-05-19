@@ -20,6 +20,8 @@ def generateTraj(robotId):
     theta = []
     x = []
     y = []
+
+    # Phrase 1, first two steps and one cliff
     landing_steps = 30
     for i in range(landing_steps):
         fy.append(0)
@@ -63,10 +65,47 @@ def generateTraj(robotId):
         x.append(0)
         y.append(0.05)
 
-    wait_step_air = 1000
+    wait_step_air = 200
     for i in range(wait_step_air):
         fy.append(np.pi / 2)
         theta.append(0.2 - np.pi / 4)
+        x.append(0)
+        y.append(0.05)
+
+    # Phrase 2, second cliff. After 770 counts.
+    landing_steps = 300
+    for i in range(landing_steps):
+        fy.append(np.pi / 2)
+        theta.append(- 0.2 - np.pi / 4)
+        x.append(0.0)
+        y.append(0.05)
+
+    forward_step_adjust = 40
+    for i in range(forward_step_adjust):
+        fy.append(np.pi / 2)
+        theta.append(- 0.2 - np.pi / 4 + 0.4 * i / forward_step_adjust)
+        x.append(0.0)
+        y.append(0.05)
+
+    forward_step = 440
+    for i in range(forward_step):
+        fy.append(np.pi / 2)
+        theta.append(0.2 - np.pi / 4)
+        x.append(0.0)
+        y.append(0.05)
+
+    stretching_step = 20
+    omega = np.pi / 4
+    for i in range(stretching_step):
+        fy.append(np.pi / 2 - 2 * omega * i / stretching_step)
+        theta.append(- np.pi / 4 + omega * i / stretching_step)
+        x.append(0)
+        y.append(0.05)
+
+    wait_step = 100
+    for i in range(wait_step):
+        fy.append(0)
+        theta.append(0.2)
         x.append(0)
         y.append(0.05)
 
