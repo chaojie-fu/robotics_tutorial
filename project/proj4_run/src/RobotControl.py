@@ -13,49 +13,122 @@ def loadRobot(initPos):
     return p.loadURDF(Helper.findURDF(robotName), initPos, initOrn)
 
 
-def generateTraj(robotId, state, predict_step):
+def generateTraj(robotId):
     # work in this function to make a plan before actual control
     # the output can be in any data structure you like
-    theta = []
     fy = []
+    theta = []
     x = []
+    y = []
 
-    if 1.2 >= state[2] >= -0.2:
-        for i in range(predict_step):
-            theta.append(0.2)
-            fy.append(0.0)
-            x.append(0.0)
-    elif 1.6 >= state[2] > 1.2:
-        for i in range(predict_step):
-            theta.append(-1.0)
-            fy.append(0.0)
-            x.append(0.0)
-    else:
-        for i in range(predict_step):
-            theta.append(0.0)
-            fy.append(0.0)
-            x.append(0.0)
-        pass
+    # Phrase 1, first two steps and one cliff
+    landing_steps = 30
+    for i in range(landing_steps):
+        fy.append(0)
+        theta.append(0)
+        x.append(0)
+        y.append(0)
 
-    plan = [np.array(theta), np.array(fy), np.array(x)]
+    bending_step = 100
+    for i in range(bending_step):
+        fy.append(np.pi / 2 * i / bending_step)
+        theta.append(- np.pi / 4 * i / bending_step)
+        x.append(0)
+        y.append(0.05)
+
+    forward_step = 270
+    for i in range(forward_step):
+        fy.append(np.pi / 2)
+        theta.append(0.2 - np.pi / 4)
+        x.append(0)
+        y.append(0.05)
+
+    stretching_step = 20
+    omega = np.pi / 4
+    for i in range(stretching_step):
+        fy.append(np.pi / 2 - 2 * omega * i / stretching_step)
+        theta.append(- np.pi / 4 + omega * i / stretching_step)
+        x.append(0)
+        y.append(0.05)
+
+    wait_step = 100
+    for i in range(wait_step):
+        fy.append(0)
+        theta.append(0)
+        x.append(0)
+        y.append(0.05)
+
+    stretching_step_air = 50
+    for i in range(stretching_step_air):
+        fy.append(2 * omega * i / stretching_step_air)
+        theta.append(0.2 - omega * i / stretching_step_air)
+        x.append(0)
+        y.append(0.05)
+
+    wait_step_air = 200
+    for i in range(wait_step_air):
+        fy.append(np.pi / 2)
+        theta.append(0.2 - np.pi / 4)
+        x.append(0)
+        y.append(0.05)
+
+    # Phrase 2, second cliff. After 770 counts.
+    landing_steps = 300
+    for i in range(landing_steps):
+        fy.append(np.pi / 2)
+        theta.append(- 0.2 - np.pi / 4)
+        x.append(0.0)
+        y.append(0.05)
+
+    forward_step_adjust = 40
+    for i in range(forward_step_adjust):
+        fy.append(np.pi / 2)
+        theta.append(- 0.2 - np.pi / 4 + 0.4 * i / forward_step_adjust)
+        x.append(0.0)
+        y.append(0.05)
+
+    forward_step = 440
+    for i in range(forward_step):
+        fy.append(np.pi / 2)
+        theta.append(0.2 - np.pi / 4)
+        x.append(0.0)
+        y.append(0.05)
+
+    stretching_step = 20
+    omega = np.pi / 4
+    for i in range(stretching_step):
+        fy.append(np.pi / 2 - 2 * omega * i / stretching_step)
+        theta.append(- np.pi / 4 + omega * i / stretching_step)
+        x.append(0)
+        y.append(0.05)
+
+    wait_step = 100
+    for i in range(wait_step):
+        fy.append(0)
+        theta.append(0.2)
+        x.append(0)
+        y.append(0.05)
+
+    plan = [np.array(theta), np.array(fy), np.array(x), np.array(y)]
     return plan
 
 
-def realTimeControl(robotId, count):
+def realTimeControl(robotId, plan, count):
     # work in this function to calculate real time control signal
     # the output should be a list of two float
     start = time.time()
-    predict_step = 20
+
+    predict_step = 10
+    plan = np.transpose(plan)
+    reference = plan[count: count + predict_step]
+    reference = np.transpose(reference)
     state = getstate(robotId)
-    # reference be a 3 * predict_step numpy array
-    reference = generateTraj(robotId, state, predict_step)
     # mpc = Fly(state, reference)
     mpc = Walk(state, reference)
     controlSignal = mpc.Solve()
     # controlSignal = [0, 0]
     if count % 10 == 0:
         print('Count   ', count)
-        print('reference', reference)
         print('state', state)
         print('M1, M2', controlSignal)
         end = time.time()
@@ -69,7 +142,9 @@ def realTimeControl(robotId, count):
 def addDebugItems(robotId):
     # work in this function to add any debug visual items you need
     p.addUserDebugLine((0.0, 0.0, 0.0), (0.0, 0.0, -10.0), lineWidth=1, parentObjectUniqueId=robotId, parentLinkIndex=5)
-    p.addUserDebugLine((0.0, 0.0, 0.05), (2.0, 0.0, 0.05), lineWidth=1)
+    for i in range(10):
+        p.addUserDebugLine((0.0, 0.0, 0.05 + i * 0.2), (2.0, 0.0, 0.05 + i * 0.2), lineWidth=1)
+
 
 
 def getstate(robotId):
@@ -94,13 +169,12 @@ def getstate(robotId):
     v_fy = jointState_0[1]
     x = pos_wheel[0][0]
     v_x = pos_wheel[6][0]
-    # y = -pos_wheel[0][2]
-    # v_y = -pos_wheel[6][2]
-    # alpha = Euler_wheel
-    # v_alpha = pos_wheel[7][1]
+    y = pos_wheel[0][2]
+    v_y = pos_wheel[6][2]
+    alpha = Euler_wheel
+    v_alpha = pos_wheel[7][1]
 
-    # return [theta, fy, x, v_theta, v_fy, v_x, y, v_y, alpha, v_alpha]
-    return [theta, fy, x, v_theta, v_fy, v_x]
+    return [theta, fy, x, v_theta, v_fy, v_x, y, v_y, alpha, v_alpha]
 
 
 def Quaternion2Angle(quaternion):

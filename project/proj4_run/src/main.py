@@ -13,7 +13,7 @@ p.connect(p.GUI)
 p.setGravity(0.0, 0.0, -10.0)
 
 # load your robot here
-initPos = [0.0, 0.0, 2.0]
+initPos = [0.0, 0.0, 1.25]
 robotId = RobotControl.loadRobot(initPos)
 
 # specify the names for your motor joints in urdf file
@@ -26,6 +26,8 @@ env = Env(robotId, targetPos)
 env.setMotorName(motorName)
 env.addBonusBlock()
 
+plan = RobotControl.generateTraj(env.robotId)
+
 # print infomation for all the joints
 for jointId in range(p.getNumJoints(env.robotId)):
     print(p.getJointInfo(env.robotId, jointId))
@@ -37,13 +39,20 @@ if recordVideo:
 
 t = 0
 count = 0
+y_max = 0
 
 while True:
     p.stepSimulation()
-    p.changeDynamics(robotId, 5, lateralFriction=2)
+    p.changeDynamics(robotId, 5, lateralFriction=20)
     time.sleep(1/240)
 
-    controlSignal = RobotControl.realTimeControl(env.robotId, count)
+    state = RobotControl.getstate(robotId)
+    y = state[6]
+    if y >= y_max:
+        y_max = y
+    if count % 10 == 0:
+        print(y_max - 0.25)
+    controlSignal = RobotControl.realTimeControl(env.robotId, plan, count)
     env.control(controlSignal)
 
     env.cameraControl()

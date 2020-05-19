@@ -139,7 +139,7 @@ class Walk:
     def Solve(self):
         SolverFactory('ipopt').solve(self.iN)
 
-        M1 = -self.iN.M1[1]()
+        M1 = -1 * self.iN.M1[1]()
         M2 = self.iN.M2[1]()
         return [M1, M2]
 
@@ -307,7 +307,7 @@ class Fly:
     def Solve(self):
         SolverFactory('ipopt').solve(self.iN)
 
-        M1 = -self.iN.M1[1]()
+        M1 = -1 * self.iN.M1[1]()
         M2 = self.iN.M2[1]()
         return [M1, M2]
 
