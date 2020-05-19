@@ -16,45 +16,60 @@ def loadRobot(initPos):
 def generateTraj(robotId):
     # work in this function to make a plan before actual control
     # the output can be in any data structure you like
-    landing_steps = 200
     fy = []
     theta = []
     x = []
     y = []
+    landing_steps = 30
     for i in range(landing_steps):
         fy.append(0)
         theta.append(0)
         x.append(0)
         y.append(0)
 
-    forward_step = 1000
-    for i in range(forward_step):
-        fy.append(0)
-        theta.append(0.2)
-        x.append(i / forward_step)
-        y.append(0.05)
-
-    bending_step = 200
+    bending_step = 100
     for i in range(bending_step):
         fy.append(np.pi / 2 * i / bending_step)
         theta.append(- np.pi / 4 * i / bending_step)
         x.append(0)
         y.append(0.05)
 
-    stretching_step = 5
-    omega = np.pi / 4
-    for i in range(stretching_step):
-        fy.append(np.pi / 2 - 2 * omega * i / stretching_step)
-        theta.append(-np.pi / 4 + omega * i / stretching_step)
+    forward_step = 270
+    for i in range(forward_step):
+        fy.append(np.pi / 2)
+        theta.append(0.2 - np.pi / 4)
         x.append(0)
         y.append(0.05)
 
-    wait_step = 1000
+    stretching_step = 20
+    omega = np.pi / 4
+    for i in range(stretching_step):
+        fy.append(np.pi / 2 - 2 * omega * i / stretching_step)
+        theta.append(- np.pi / 4 + omega * i / stretching_step)
+        x.append(0)
+        y.append(0.05)
+
+    wait_step = 100
     for i in range(wait_step):
         fy.append(0)
         theta.append(0)
         x.append(0)
         y.append(0.05)
+
+    stretching_step_air = 50
+    for i in range(stretching_step_air):
+        fy.append(2 * omega * i / stretching_step_air)
+        theta.append(0.2 - omega * i / stretching_step_air)
+        x.append(0)
+        y.append(0.05)
+
+    wait_step_air = 1000
+    for i in range(wait_step_air):
+        fy.append(np.pi / 2)
+        theta.append(0.2 - np.pi / 4)
+        x.append(0)
+        y.append(0.05)
+
     plan = [np.array(theta), np.array(fy), np.array(x), np.array(y)]
     return plan
 
@@ -75,7 +90,6 @@ def realTimeControl(robotId, plan, count):
     # controlSignal = [0, 0]
     if count % 10 == 0:
         print('Count   ', count)
-        print('reference', reference)
         print('state', state)
         print('M1, M2', controlSignal)
         end = time.time()
@@ -89,7 +103,9 @@ def realTimeControl(robotId, plan, count):
 def addDebugItems(robotId):
     # work in this function to add any debug visual items you need
     p.addUserDebugLine((0.0, 0.0, 0.0), (0.0, 0.0, -10.0), lineWidth=1, parentObjectUniqueId=robotId, parentLinkIndex=5)
-    p.addUserDebugLine((0.0, 0.0, 0.05), (2.0, 0.0, 0.05), lineWidth=1)
+    for i in range(10):
+        p.addUserDebugLine((0.0, 0.0, 0.05 + i * 0.2), (2.0, 0.0, 0.05 + i * 0.2), lineWidth=1)
+
 
 
 def getstate(robotId):
@@ -114,8 +130,8 @@ def getstate(robotId):
     v_fy = jointState_0[1]
     x = pos_wheel[0][0]
     v_x = pos_wheel[6][0]
-    y = -pos_wheel[0][2]
-    v_y = -pos_wheel[6][2]
+    y = pos_wheel[0][2]
+    v_y = pos_wheel[6][2]
     alpha = Euler_wheel
     v_alpha = pos_wheel[7][1]
 
